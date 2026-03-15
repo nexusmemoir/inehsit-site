@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inehsit Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--bg2:#eeecea;--white:#fff;
+  --ink:#1a1916;--ink2:#3d3b37;--muted:#8a8780;
+  --blue:#4475c8;--blue-l:#e8effc;
+  --green:#2a7a4a;--green-l:#e8f5ee;
+  --red:#c84444;--red-l:#fde8e8;
+  --yellow:#b8894a;--yellow-l:#f7f0e6;
+  --border:#dddbd5;--radius:10px;
+  --sidebar:240px;
+  --font-head:'Bricolage Grotesque',sans-serif;
+  --font:'Instrument Sans',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6}
+
+/* LOGIN */
+#login-screen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;background:var(--ink);
+}
+.login-card{
+  background:var(--white);border-radius:16px;
+  padding:2.5rem 2rem;width:360px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.login-logo{
+  font-family:var(--font-head);font-size:1.4rem;font-weight:800;
+  color:var(--ink);text-align:center;margin-bottom:.5rem;letter-spacing:-.02em;
+}
+.login-sub{font-size:.82rem;color:var(--muted);text-align:center;margin-bottom:2rem;}
+.login-label{display:block;font-size:.78rem;font-weight:600;color:var(--ink2);margin-bottom:.4rem;}
+.login-input{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:.8rem 1rem;font-size:.95rem;
+  font-family:var(--font);color:var(--ink);outline:none;
+  transition:border-color .2s;
+}
+.login-input:focus{border-color:var(--blue);}
+.login-btn{
+  width:100%;background:var(--ink);color:white;border:none;
+  padding:.9rem;border-radius:8px;font-size:.95rem;font-weight:600;
+  font-family:var(--font);cursor:pointer;margin-top:1rem;
+  transition:background .2s;
+}
+.login-btn:hover{background:var(--blue);}
+.login-error{
+  background:var(--red-l);border:1px solid rgba(200,68,68,.2);
+  border-radius:6px;padding:.6rem .9rem;font-size:.82rem;
+  color:var(--red);margin-top:.75rem;display:none;text-align:center;
+}
+
+/* APP SHELL */
+#app{display:none;min-height:100vh;flex-direction:row;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);background:var(--ink);
+  min-height:100vh;position:fixed;top:0;left:0;
+  display:flex;flex-direction:column;z-index:50;
+}
+.sidebar-logo{
+  padding:1.5rem 1.25rem 1rem;
+  font-family:var(--font-head);font-size:1.1rem;font-weight:800;
+  color:white;letter-spacing:-.02em;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:.5rem;
+}
+.sidebar-logo span{font-size:.65rem;background:var(--blue);padding:.15rem .5rem;border-radius:4px;font-family:var(--font);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.sidebar-nav{flex:1;padding:.75rem 0;}
+.nav-item{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.65rem 1.25rem;cursor:pointer;
+  color:rgba(255,255,255,.5);font-size:.88rem;font-weight:500;
+  transition:all .15s;border-left:2px solid transparent;
+  text-decoration:none;
+}
+.nav-item:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.05);}
+.nav-item.active{color:white;background:rgba(255,255,255,.08);border-left-color:var(--blue);}
+.nav-icon{font-size:1rem;width:18px;text-align:center;}
+.nav-badge{
+  margin-left:auto;background:var(--red);color:white;
+  font-size:.65rem;font-weight:700;padding:.1rem .45rem;
+  border-radius:100px;min-width:18px;text-align:center;
+}
+.sidebar-bottom{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.08);}
+.logout-btn{
+  width:100%;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.1);border-radius:7px;
+  padding:.55rem;font-size:.82rem;cursor:pointer;
+  font-family:var(--font);transition:all .15s;
+}
+.logout-btn:hover{background:rgba(200,68,68,.2);color:var(--red);border-color:rgba(200,68,68,.3);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;min-height:100vh;}
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:1rem 2rem;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:10;
+}
+.topbar-title{font-family:var(--font-head);font-size:1.1rem;font-weight:700;color:var(--ink);}
+.topbar-sub{font-size:.78rem;color:var(--muted);}
+
+.content{padding:2rem;}
+
+/* CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:1.25rem 1.5rem;
+}
+.stat-card-num{font-family:var(--font-head);font-size:1.8rem;font-weight:800;color:var(--ink);letter-spacing:-.03em;}
+.stat-card-label{font-size:.78rem;color:var(--muted);margin-top:.2rem;}
+.stat-card-icon{font-size:1.5rem;margin-bottom:.5rem;}
+
+/* SECTION CARD */
+.section-card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--radius);margin-bottom:1.5rem;overflow:hidden;
+}
+.section-head{
+  padding:1rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.section-head h3{font-family:var(--font-head);font-size:.95rem;font-weight:700;color:var(--ink);}
+.section-head p{font-size:.78rem;color:var(--muted);}
+.section-body{padding:1.5rem;}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{
+  text-align:left;font-size:.72rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  padding:.6rem 1rem;border-bottom:1px solid var(--border);background:var(--bg);
+}
+.data-table td{
+  padding:.8rem 1rem;border-bottom:1px solid var(--border);
+  font-size:.88rem;color:var(--ink2);vertical-align:middle;
+}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:var(--bg);}
+
+/* BADGES */
+.badge{
+  display:inline-block;font-size:.68rem;font-weight:700;
+  padding:.15rem .55rem;border-radius:4px;letter-spacing:.04em;
+}
+.badge-green{background:var(--green-l);color:var(--green);}
+.badge-red{background:var(--red-l);color:var(--red);}
+.badge-blue{background:var(--blue-l);color:var(--blue);}
+.badge-yellow{background:var(--yellow-l);color:var(--yellow);}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.5rem 1rem;border-radius:7px;font-size:.82rem;
+  font-weight:600;font-family:var(--font);cursor:pointer;
+  border:none;transition:all .15s;text-decoration:none;
+}
+.btn-primary{background:var(--ink);color:white;}
+.btn-primary:hover{background:var(--blue);}
+.btn-blue{background:var(--blue);color:white;}
+.btn-blue:hover{opacity:.88;}
+.btn-red{background:var(--red-l);color:var(--red);border:1px solid rgba(200,68,68,.2);}
+.btn-red:hover{background:var(--red);color:white;}
+.btn-ghost{background:var(--bg);color:var(--ink2);border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+.btn-sm{padding:.35rem .75rem;font-size:.78rem;}
+.btn-icon{padding:.4rem .5rem;background:var(--bg);border:1.5px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-size:.85rem;transition:all .15s;}
+.btn-icon:hover{border-color:var(--blue);color:var(--blue);}
+.btn-icon.del:hover{border-color:var(--red);color:var(--red);background:var(--red-l);}
+
+/* FORM ELEMENTS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.form-full{margin-bottom:1rem;}
+.label{display:block;font-size:.78rem;font-weight:600;color:var(--ink2);margin-bottom:.4rem;}
+.input,.textarea,.select{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:7px;padding:.7rem .9rem;font-size:.9rem;
+  font-family:var(--font);color:var(--ink);outline:none;
+  transition:border-color .2s;
+}
+.input:focus,.textarea:focus,.select:focus{border-color:var(--blue);background:var(--white);}
+.textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.select{-webkit-appearance:none;cursor:pointer;}
+.toggle{
+  position:relative;display:inline-flex;align-items:center;
+  cursor:pointer;gap:.5rem;font-size:.85rem;color:var(--ink2);
+}
+.toggle input{position:absolute;opacity:0;width:0;height:0;}
+.toggle-track{
+  width:36px;height:20px;background:var(--border);border-radius:100px;
+  transition:background .2s;flex-shrink:0;
+}
+.toggle input:checked~.toggle-track{background:var(--blue);}
+.toggle-thumb{
+  position:absolute;width:14px;height:14px;background:white;
+  border-radius:50%;left:3px;top:3px;transition:transform .2s;
+}
+.toggle input:checked~.toggle-track .toggle-thumb{transform:translateX(16px);}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;display:none;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--white);border-radius:14px;
+  width:540px;max-width:95vw;max-height:90vh;
+  overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal-head{
+  padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.modal-head h3{font-family:var(--font-head);font-size:1rem;font-weight:700;}
+.modal-close{background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--muted);padding:.25rem;}
+.modal-body{padding:1.5rem;}
+.modal-footer{
+  padding:1rem 1.5rem;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:.75rem;
+  position:sticky;bottom:0;background:var(--white);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;
+  background:var(--ink);color:white;
+  padding:.75rem 1.25rem;border-radius:8px;font-size:.88rem;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:500;
+  transform:translateY(100px);opacity:0;transition:all .3s;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+
+/* SUBMISSION DETAIL */
+.sub-detail{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.sub-field{background:var(--bg);border-radius:7px;padding:.75rem 1rem;}
+.sub-field-label{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.sub-field-val{font-size:.9rem;color:var(--ink);}
+
+/* SEARCH */
+.search-bar{
+  display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;
+}
+.search-input{
+  flex:1;background:var(--white);border:1.5px solid var(--border);
+  border-radius:8px;padding:.6rem 1rem;font-size:.88rem;
+  font-family:var(--font);color:var(--ink);outline:none;
+}
+.search-input:focus{border-color:var(--blue);}
+
+/* EMPTY STATE */
+.empty{
+  text-align:center;padding:3rem 1rem;color:var(--muted);
+}
+.empty-icon{font-size:2.5rem;margin-bottom:.75rem;display:block;}
+.empty p{font-size:.9rem;}
+
+/* TABS */
+.tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--bg2);border-radius:8px;padding:.25rem;}
+.tab{
+  flex:1;text-align:center;padding:.5rem .75rem;border-radius:6px;
+  font-size:.82rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;
+}
+.tab.active{background:var(--white);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
+/* PAGE sections hidden */
+.page{display:none;}
+.page.active{display:block;}
+
+/* Responsive */
+@media(max-width:900px){
+  .sidebar{width:60px;}
+  .sidebar-logo,.nav-item span,.sidebar-bottom{display:none;}
+  .nav-item{padding:.65rem;justify-content:center;}
+  .nav-icon{width:auto;}
+  .main{margin-left:60px;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Inehsit</div>
+    <div class="login-sub">Admin Paneli</div>
+    <label class="login-label">Şifre</label>
+    <input type="password" class="login-input" id="loginPass" placeholder="Şifrenizi girin" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="login-error" id="loginError">Hatalı şifre</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">Inehsit <span>Admin</span></div>
+    <div class="sidebar-nav">
+      <a class="nav-item active" data-page="dashboard" onclick="nav('dashboard')">
+        <span class="nav-icon">◻</span><span>Dashboard</span>
+      </a>
+      <a class="nav-item" data-page="submissions" onclick="nav('submissions')">
+        <span class="nav-icon">✉</span><span>Formlar</span>
+        <span class="nav-badge" id="unreadBadge" style="display:none">0</span>
+      </a>
+      <a class="nav-item" data-page="testimonials" onclick="nav('testimonials')">
+        <span class="nav-icon">★</span><span>Yorumlar</span>
+      </a>
+      <a class="nav-item" data-page="brands" onclick="nav('brands')">
+        <span class="nav-icon">◈</span><span>Markalar</span>
+      </a>
+      <a class="nav-item" data-page="content" onclick="nav('content')">
+        <span class="nav-icon">✎</span><span>İçerik</span>
+      </a>
+      <a class="nav-item" data-page="settings" onclick="nav('settings')">
+        <span class="nav-icon">⚙</span><span>Ayarlar</span>
+      </a>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="doLogout()">Çıkış Yap</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <div class="topbar-sub" id="pageSubtitle">Genel bakış</div>
+      </div>
+      <div style="display:flex;gap:.5rem;">
+        <a href="/" target="_blank" class="btn btn-ghost btn-sm">Siteyi Gör →</a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stat-grid" id="dashStats"></div>
+        <div class="section-card">
+          <div class="section-head">
+            <div><h3>Son Formlar</h3><p>En son gelen 5 form</p></div>
+            <button class="btn btn-ghost btn-sm" onclick="nav('submissions')">Tümünü Gör</button>
+          </div>
+          <div class="section-body" style="padding:0">
+            <table class="data-table" id="recentSubmissions">
+              <thead><tr><th>Ad</th><th>Hizmet</th><th>Tarih</th><th>Durum</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMISSIONS -->
+      <div class="page" id="page-submissions">
+        <div class="search-bar">
+          <input class="search-input" id="subSearch" placeholder="İsim veya telefon ara..." oninput="filterSubs()">
+          <button class="btn btn-red btn-sm" onclick="deleteAllSubs()">Tümünü Sil</button>
+        </div>
+        <div class="section-card">
+          <div class="section-body" style="padding:0">
+            <table class="data-table" id="subsTable">
+              <thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Hizmet</th><th>Tarih</th><th>Durum</th><th>İşlem</th></tr></thead>
+              <tbody id="subsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div class="page" id="page-testimonials">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+          <button class="btn btn-primary" onclick="openTestiModal()">+ Yeni Yorum</button>
+        </div>
+        <div class="section-card">
+          <div class="section-body" style="padding:0">
+            <table class="data-table">
+              <thead><tr><th>Firma</th><th>Kişi</th><th>Yorum</th><th>Durum</th><th>İşlem</th></tr></thead>
+              <tbody id="testiTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BRANDS -->
+      <div class="page" id="page-brands">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+          <button class="btn btn-primary" onclick="openBrandModal()">+ Yeni Marka</button>
+        </div>
+        <div class="section-card">
+          <div class="section-body" style="padding:0">
+            <table class="data-table">
+              <thead><tr><th>Marka Adı</th><th>Logo URL</th><th>Durum</th><th>İşlem</th></tr></thead>
+              <tbody id="brandsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="page" id="page-content">
+        <div class="tabs">
+          <div class="tab active" onclick="contentTab('hero',this)">Hero</div>
+          <div class="tab" onclick="contentTab('services',this)">Hizmetler</div>
+          <div class="tab" onclick="contentTab('stats',this)">İstatistikler</div>
+        </div>
+        <div id="content-hero"></div>
+        <div id="content-services" style="display:none"></div>
+        <div id="content-stats" style="display:none"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="section-card">
+          <div class="section-head"><div><h3>Site Ayarları</h3><p>Genel bilgiler ve şifre</p></div></div>
+          <div class="section-body">
+            <div class="form-row">
+              <div>
+                <label class="label">Site Başlığı</label>
+                <input class="input" id="set-siteTitle" placeholder="Site başlığı">
+              </div>
+              <div>
+                <label class="label">E-posta</label>
+                <input class="input" id="set-email" placeholder="info@inehsit.io">
+              </div>
+            </div>
+            <div class="form-row">
+              <div>
+                <label class="label">Yeni Admin Şifresi</label>
+                <input type="password" class="input" id="set-newPass" placeholder="Boş bırakırsanız değişmez">
+              </div>
+              <div>
+                <label class="label">Şifre Tekrar</label>
+                <input type="password" class="input" id="set-newPass2" placeholder="Şifre tekrar">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveSettings()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /app -->
+
+<!-- MODAL: Submission Detail -->
+<div class="modal-overlay" id="subModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Form Detayı</h3>
+      <button class="modal-close" onclick="closeModal('subModal')">×</button>
+    </div>
+    <div class="modal-body" id="subModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-red" id="subDeleteBtn">Sil</button>
+      <button class="btn btn-ghost" onclick="closeModal('subModal')">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Testimonial -->
+<div class="modal-overlay" id="testiModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="testiModalTitle">Yeni Yorum</h3>
+      <button class="modal-close" onclick="closeModal('testiModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div>
+          <label class="label">Firma Adı</label>
+          <input class="input" id="t-company" placeholder="Kozmetik Markası">
+        </div>
+        <div>
+          <label class="label">Kişi Adı</label>
+          <input class="input" id="t-name" placeholder="Ayşe K.">
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label class="label">Rol / Unvan</label>
+          <input class="input" id="t-role" placeholder="Marka Sahibi">
+        </div>
+        <div>
+          <label class="label">Baş Harfler (Avatar)</label>
+          <input class="input" id="t-initials" placeholder="AK" maxlength="2">
+        </div>
+      </div>
+      <div class="form-full">
+        <label class="label">Yorum Metni</label>
+        <textarea class="textarea" id="t-quote" placeholder="Müşteri yorumu..."></textarea>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="t-active" checked>
+        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        Aktif (sitede göster)
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('testiModal')">İptal</button>
+      <button class="btn btn-primary" onclick="saveTesti()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Brand -->
+<div class="modal-overlay" id="brandModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="brandModalTitle">Yeni Marka</h3>
+      <button class="modal-close" onclick="closeModal('brandModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-full">
+        <label class="label">Marka Adı</label>
+        <input class="input" id="b-name" placeholder="Marka adı">
+      </div>
+      <div class="form-full">
+        <label class="label">Logo URL (opsiyonel)</label>
+        <input class="input" id="b-logoUrl" placeholder="https://...logo.png">
+        <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem;">Logo URL girilmezse marka adı metin olarak gösterilir.</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="b-active" checked>
+        <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        Aktif (şeritte göster)
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('brandModal')">İptal</button>
+      <button class="btn btn-primary" onclick="saveBrand()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+let TOKEN = localStorage.getItem('admin_token') || '';
+let editingTestiId = null;
+let editingBrandId = null;
+let allSubs = [];
+
+// ── AUTH ──────────────────────────────────────────────────
+async function doLogin() {
+  const pass = document.getElementById('loginPass').value;
+  const res = await fetch('/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pass })
+  });
+  if (res.ok) {
+    const d = await res.json();
+    TOKEN = d.token;
+    localStorage.setItem('admin_token', TOKEN);
+    showApp();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+async function doLogout() {
+  await api('POST', '/api/admin/logout');
+  TOKEN = '';
+  localStorage.removeItem('admin_token');
+  location.reload();
+}
+
+async function checkAuth() {
+  if (!TOKEN) return showLogin();
+  const res = await fetch('/api/admin/verify', { headers: { 'x-admin-token': TOKEN } });
+  if (res.ok) showApp();
+  else showLogin();
+}
+
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  loadDashboard();
+}
+
+// ── API HELPER ────────────────────────────────────────────
+async function api(method, url, body) {
+  const opts = {
+    method,
+    headers: { 'x-admin-token': TOKEN, 'Content-Type': 'application/json' }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(url, opts);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────
+const pageTitles = {
+  dashboard: ['Dashboard', 'Genel bakış'],
+  submissions: ['Formlar', 'Gelen form talepleri'],
+  testimonials: ['Müşteri Yorumları', 'Yorumları yönet'],
+  brands: ['Marka Logoları', 'Şeritteki markalar'],
+  content: ['İçerik Yönetimi', 'Sayfa metinleri ve videolar'],
+  settings: ['Ayarlar', 'Site ve hesap ayarları']
+};
+
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.page === page);
+  });
+  const [title, sub] = pageTitles[page] || [page, ''];
+  document.getElementById('pageTitle').textContent = title;
+  document.getElementById('pageSubtitle').textContent = sub;
+
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'submissions') loadSubmissions();
+  if (page === 'testimonials') loadTestimonials();
+  if (page === 'brands') loadBrands();
+  if (page === 'content') loadContent();
+  if (page === 'settings') loadSettings();
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── MODAL ─────────────────────────────────────────────────
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ── DASHBOARD ────────────────────────────────────────────
+async function loadDashboard() {
+  const [subs, testis, brands] = await Promise.all([
+    api('GET', '/api/admin/submissions'),
+    api('GET', '/api/admin/testimonials'),
+    api('GET', '/api/admin/brands')
+  ]);
+
+  const unread = subs.filter(s => !s.read).length;
+  const badge = document.getElementById('unreadBadge');
+  badge.textContent = unread;
+  badge.style.display = unread > 0 ? 'inline-block' : 'none';
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card"><div class="stat-card-icon">✉</div><div class="stat-card-num">${subs.length}</div><div class="stat-card-label">Toplam Form</div></div>
+    <div class="stat-card"><div class="stat-card-icon">🔴</div><div class="stat-card-num">${unread}</div><div class="stat-card-label">Okunmamış</div></div>
+    <div class="stat-card"><div class="stat-card-icon">★</div><div class="stat-card-num">${testis.filter(t=>t.active).length}</div><div class="stat-card-label">Aktif Yorum</div></div>
+    <div class="stat-card"><div class="stat-card-icon">◈</div><div class="stat-card-num">${brands.filter(b=>b.active).length}</div><div class="stat-card-label">Aktif Marka</div></div>
+  `;
+
+  const tbody = document.querySelector('#recentSubmissions tbody');
+  const recent = subs.slice(0, 5);
+  tbody.innerHTML = recent.length ? recent.map(s => `
+    <tr>
+      <td><strong>${s.name || '—'}</strong></td>
+      <td>${s.service || '—'}</td>
+      <td>${fmtDate(s.submittedAt)}</td>
+      <td><span class="badge ${s.read ? 'badge-green' : 'badge-red'}">${s.read ? 'Okundu' : 'Yeni'}</span></td>
+    </tr>
+  `).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:2rem">Henüz form yok</td></tr>';
+}
+
+// ── SUBMISSIONS ───────────────────────────────────────────
+async function loadSubmissions() {
+  allSubs = await api('GET', '/api/admin/submissions');
+  renderSubs(allSubs);
+}
+
+function filterSubs() {
+  const q = document.getElementById('subSearch').value.toLowerCase();
+  renderSubs(allSubs.filter(s =>
+    (s.name||'').toLowerCase().includes(q) ||
+    (s.phone||'').toLowerCase().includes(q) ||
+    (s.email||'').toLowerCase().includes(q)
+  ));
+}
+
+function renderSubs(list) {
+  const tbody = document.getElementById('subsTbody');
+  tbody.innerHTML = list.length ? list.map(s => `
+    <tr>
+      <td><strong>${s.name||'—'}</strong></td>
+      <td>${s.phone||'—'}</td>
+      <td>${s.service||'—'}</td>
+      <td>${fmtDate(s.submittedAt)}</td>
+      <td><span class="badge ${s.read?'badge-green':'badge-red'}">${s.read?'Okundu':'Yeni'}</span></td>
+      <td>
+        <button class="btn-icon" onclick="openSub('${s.id}')">👁</button>
+        <button class="btn-icon del" onclick="deleteSub('${s.id}')">✕</button>
+      </td>
+    </tr>
+  `).join('') : '<tr><td colspan="6"><div class="empty"><span class="empty-icon">✉</span><p>Form yok</p></div></td></tr>';
+}
+
+async function openSub(id) {
+  const s = allSubs.find(x => x.id === id);
+  if (!s) return;
+  if (!s.read) {
+    await api('PUT', `/api/admin/submissions/${id}/read`);
+    s.read = true;
+    renderSubs(allSubs);
+  }
+  const body = document.getElementById('subModalBody');
+  body.innerHTML = `
+    <div class="sub-detail">
+      ${field('Ad Soyad', s.name)}
+      ${field('Telefon', s.phone)}
+      ${field('E-posta', s.email)}
+      ${field('Marka', s.brand)}
+      ${field('Hizmet', s.service)}
+      ${field('Tarih', fmtDate(s.submittedAt))}
+    </div>
+  `;
+  document.getElementById('subDeleteBtn').onclick = () => { deleteSub(id); closeModal('subModal'); };
+  document.getElementById('subModal').classList.add('open');
+}
+
+async function deleteSub(id) {
+  if (!confirm('Bu formu silmek istiyor musunuz?')) return;
+  await api('DELETE', `/api/admin/submissions/${id}`);
+  allSubs = allSubs.filter(s => s.id !== id);
+  renderSubs(allSubs);
+  toast('Form silindi', 'success');
+}
+
+async function deleteAllSubs() {
+  if (!confirm('Tüm formları silmek istiyor musunuz?')) return;
+  await api('DELETE', '/api/admin/submissions');
+  allSubs = [];
+  renderSubs([]);
+  toast('Tüm formlar silindi');
+}
+
+function field(label, val) {
+  return `<div class="sub-field"><div class="sub-field-label">${label}</div><div class="sub-field-val">${val||'—'}</div></div>`;
+}
+
+// ── TESTIMONIALS ──────────────────────────────────────────
+async function loadTestimonials() {
+  const list = await api('GET', '/api/admin/testimonials');
+  const tbody = document.getElementById('testiTbody');
+  tbody.innerHTML = list.map(t => `
+    <tr>
+      <td><strong>${t.company||'—'}</strong></td>
+      <td>${t.name||'—'} <span style="color:var(--muted);font-size:.8rem">${t.role||''}</span></td>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.quote||'—'}</td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${t.active?'checked':''} onchange="toggleTesti('${t.id}',this.checked)">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </label>
+      </td>
+      <td>
+        <button class="btn-icon" onclick="editTesti(${t.id})">✎</button>
+        <button class="btn-icon del" onclick="deleteTesti(${t.id})">✕</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openTestiModal(t) {
+  editingTestiId = t ? t.id : null;
+  document.getElementById('testiModalTitle').textContent = t ? 'Yorumu Düzenle' : 'Yeni Yorum';
+  document.getElementById('t-company').value = t?.company || '';
+  document.getElementById('t-name').value = t?.name || '';
+  document.getElementById('t-role').value = t?.role || '';
+  document.getElementById('t-initials').value = t?.initials || '';
+  document.getElementById('t-quote').value = t?.quote || '';
+  document.getElementById('t-active').checked = t ? t.active : true;
+  document.getElementById('testiModal').classList.add('open');
+}
+
+async function editTesti(id) {
+  const list = await api('GET', '/api/admin/testimonials');
+  openTestiModal(list.find(t => String(t.id) === String(id)));
+}
+
+async function saveTesti() {
+  const body = {
+    company: document.getElementById('t-company').value,
+    name: document.getElementById('t-name').value,
+    role: document.getElementById('t-role').value,
+    initials: document.getElementById('t-initials').value,
+    quote: document.getElementById('t-quote').value,
+    active: document.getElementById('t-active').checked
+  };
+  if (editingTestiId) {
+    await api('PUT', `/api/admin/testimonials/${editingTestiId}`, body);
+  } else {
+    await api('POST', '/api/admin/testimonials', body);
+  }
+  closeModal('testiModal');
+  loadTestimonials();
+  toast('Yorum kaydedildi', 'success');
+}
+
+async function toggleTesti(id, active) {
+  await api('PUT', `/api/admin/testimonials/${id}`, { active });
+  toast(active ? 'Aktif edildi' : 'Pasif edildi');
+}
+
+async function deleteTesti(id) {
+  if (!confirm('Bu yorumu silmek istiyor musunuz?')) return;
+  await api('DELETE', `/api/admin/testimonials/${id}`);
+  loadTestimonials();
+  toast('Yorum silindi');
+}
+
+// ── BRANDS ────────────────────────────────────────────────
+async function loadBrands() {
+  const list = await api('GET', '/api/admin/brands');
+  const tbody = document.getElementById('brandsTbody');
+  tbody.innerHTML = list.map(b => `
+    <tr>
+      <td><strong>${b.name||'—'}</strong></td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-size:.82rem">${b.logoUrl||'Metin olarak gösterilir'}</td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${b.active?'checked':''} onchange="toggleBrand('${b.id}',this.checked)">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </label>
+      </td>
+      <td>
+        <button class="btn-icon" onclick="editBrand(${b.id})">✎</button>
+        <button class="btn-icon del" onclick="deleteBrand(${b.id})">✕</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openBrandModal(b) {
+  editingBrandId = b ? b.id : null;
+  document.getElementById('brandModalTitle').textContent = b ? 'Marka Düzenle' : 'Yeni Marka';
+  document.getElementById('b-name').value = b?.name || '';
+  document.getElementById('b-logoUrl').value = b?.logoUrl || '';
+  document.getElementById('b-active').checked = b ? b.active : true;
+  document.getElementById('brandModal').classList.add('open');
+}
+
+async function editBrand(id) {
+  const list = await api('GET', '/api/admin/brands');
+  openBrandModal(list.find(b => String(b.id) === String(id)));
+}
+
+async function saveBrand() {
+  const body = {
+    name: document.getElementById('b-name').value,
+    logoUrl: document.getElementById('b-logoUrl').value,
+    active: document.getElementById('b-active').checked
+  };
+  if (editingBrandId) {
+    await api('PUT', `/api/admin/brands/${editingBrandId}`, body);
+  } else {
+    await api('POST', '/api/admin/brands', body);
+  }
+  closeModal('brandModal');
+  loadBrands();
+  toast('Marka kaydedildi', 'success');
+}
+
+async function toggleBrand(id, active) {
+  await api('PUT', `/api/admin/brands/${id}`, { active });
+  toast(active ? 'Aktif edildi' : 'Pasif edildi');
+}
+
+async function deleteBrand(id) {
+  if (!confirm('Bu markayı silmek istiyor musunuz?')) return;
+  await api('DELETE', `/api/admin/brands/${id}`);
+  loadBrands();
+  toast('Marka silindi');
+}
+
+// ── CONTENT ───────────────────────────────────────────────
+let contentData = {};
+
+async function loadContent() {
+  contentData = await api('GET', '/api/admin/content');
+  renderHeroTab();
+  renderServicesTab();
+  renderStatsTab();
+}
+
+function contentTab(tab, el) {
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('content-hero').style.display = tab === 'hero' ? '' : 'none';
+  document.getElementById('content-services').style.display = tab === 'services' ? '' : 'none';
+  document.getElementById('content-stats').style.display = tab === 'stats' ? '' : 'none';
+}
+
+function renderHeroTab() {
+  const h = contentData.hero || {};
+  document.getElementById('content-hero').innerHTML = `
+    <div class="section-card">
+      <div class="section-head"><div><h3>Hero Bölümü</h3><p>Banner metinleri ve video</p></div></div>
+      <div class="section-body">
+        <div class="form-full"><label class="label">Badge Metni</label><input class="input" id="h-badge" value="${h.badge||''}"></div>
+        <div class="form-full">
+          <label class="label">Typewriter Cümleler (her satır ayrı bir cümle)</label>
+          <textarea class="textarea" id="h-phrases" style="min-height:100px">${(h.typewriterPhrases||[]).join('\n')}</textarea>
+        </div>
+        <div class="form-full"><label class="label">Başlık 2. Satır</label><input class="input" id="h-title2" value="${h.title2||''}"></div>
+        <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="h-desc">${h.description||''}</textarea></div>
+        <div class="form-full">
+          <label class="label">Hero Video URL</label>
+          <input class="input" id="h-video" value="${h.videoUrl||''}" placeholder="https://... (mp4 veya YouTube embed)">
+          <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem">Boş bırakılırsa placeholder görünür</p>
+        </div>
+        <button class="btn btn-primary" onclick="saveHero()">Kaydet</button>
+      </div>
+    </div>
+  `;
+}
+
+async function saveHero() {
+  const phrases = document.getElementById('h-phrases').value.split('\n').filter(Boolean);
+  await api('PUT', '/api/admin/content', {
+    hero: {
+      badge: document.getElementById('h-badge').value,
+      typewriterPhrases: phrases,
+      title2: document.getElementById('h-title2').value,
+      description: document.getElementById('h-desc').value,
+      videoUrl: document.getElementById('h-video').value
+    }
+  });
+  toast('Hero kaydedildi', 'success');
+}
+
+function renderServicesTab() {
+  const s = contentData.services || {};
+  document.getElementById('content-services').innerHTML = ['urun','proje','hediye'].map(key => {
+    const sv = s[key] || {};
+    return `
+      <div class="section-card" style="margin-bottom:1rem">
+        <div class="section-head"><div><h3>${{urun:'Ürün Tanıtım',proje:'Proje Tanıtım',hediye:'Hediye Video'}[key]}</h3></div></div>
+        <div class="section-body">
+          <div class="form-row">
+            <div><label class="label">Tag</label><input class="input" id="sv-${key}-tag" value="${sv.tag||''}"></div>
+            <div><label class="label">Video URL</label><input class="input" id="sv-${key}-video" value="${sv.videoUrl||''}" placeholder="https://..."></div>
+          </div>
+          <div class="form-full"><label class="label">Başlık</label><input class="input" id="sv-${key}-title" value="${(sv.title||'').replace(/\n/g,' ')}"></div>
+          <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="sv-${key}-desc">${sv.description||''}</textarea></div>
+          <div class="form-full">
+            <label class="label">Etiketler (virgülle ayırın)</label>
+            <input class="input" id="sv-${key}-tags" value="${(sv.tags||[]).join(', ')}">
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="saveService('${key}')">Kaydet</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function saveService(key) {
+  const tags = document.getElementById(`sv-${key}-tags`).value.split(',').map(t=>t.trim()).filter(Boolean);
+  const update = { services: {} };
+  update.services[key] = {
+    tag: document.getElementById(`sv-${key}-tag`).value,
+    title: document.getElementById(`sv-${key}-title`).value,
+    description: document.getElementById(`sv-${key}-desc`).value,
+    tags,
+    videoUrl: document.getElementById(`sv-${key}-video`).value
+  };
+  await api('PUT', '/api/admin/content', update);
+  toast('Hizmet kaydedildi', 'success');
+}
+
+function renderStatsTab() {
+  const stats = contentData.stats || [];
+  document.getElementById('content-stats').innerHTML = `
+    <div class="section-card">
+      <div class="section-head"><div><h3>İstatistik Kutuları</h3><p>Banner altındaki 4 kutu</p></div></div>
+      <div class="section-body">
+        ${stats.map((s,i) => `
+          <div class="form-row" style="margin-bottom:.75rem">
+            <div><label class="label">Sayı / Değer</label><input class="input" id="st-${i}-num" value="${s.num||''}"></div>
+            <div><label class="label">Etiket</label><input class="input" id="st-${i}-label" value="${s.label||''}"></div>
+          </div>
+        `).join('')}
+        <button class="btn btn-primary" onclick="saveStats(${stats.length})">Kaydet</button>
+      </div>
+    </div>
+  `;
+}
+
+async function saveStats(count) {
+  const stats = [];
+  for (let i = 0; i < count; i++) {
+    stats.push({
+      num: document.getElementById(`st-${i}-num`).value,
+      label: document.getElementById(`st-${i}-label`).value
+    });
+  }
+  await api('PUT', '/api/admin/content', { stats });
+  toast('İstatistikler kaydedildi', 'success');
+}
+
+// ── SETTINGS ──────────────────────────────────────────────
+async function loadSettings() {
+  const d = await api('GET', '/api/admin/content');
+  document.getElementById('set-siteTitle').value = d.settings?.siteTitle || '';
+  document.getElementById('set-email').value = d.settings?.email || '';
+}
+
+async function saveSettings() {
+  const s = {
+    siteTitle: document.getElementById('set-siteTitle').value,
+    email: document.getElementById('set-email').value
+  };
+  const np = document.getElementById('set-newPass').value;
+  const np2 = document.getElementById('set-newPass2').value;
+  if (np) {
+    if (np !== np2) { toast('Şifreler eşleşmiyor', 'error'); return; }
+    s.adminPassword = np;
+  }
+  await api('PUT', '/api/admin/content', { settings: s });
+  toast('Ayarlar kaydedildi', 'success');
+  document.getElementById('set-newPass').value = '';
+  document.getElementById('set-newPass2').value = '';
+}
+
+// ── UTILS ─────────────────────────────────────────────────
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+// ── INIT ──────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>

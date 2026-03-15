@@ -1,0 +1,75 @@
+{
+  "settings": {
+    "adminPassword": "inehsit2025",
+    "siteTitle": "Inehsit — Yapay Zeka Reklam Videoları",
+    "email": "info@inehsit.io"
+  },
+  "hero": {
+    "badge": "Yapay Zeka Destekli Video",
+    "typewriterPhrases": [
+      "Ürününüzü gerçekten",
+      "Markanızı öne çıkaran",
+      "Müşterinizi harekete geçiren",
+      "Satışlarınızı artıran"
+    ],
+    "title2": "izleten reklamlar",
+    "description": "Çekim yok, stüdyo yok, uzun bekleyiş yok. Ürün görselinizi alıyoruz, sosyal medyaya ve reklamlara hazır sinematik video teslim ediyoruz.",
+    "videoUrl": "",
+    "ctaPrimary": "Bilgi Alın, Sizi Arayalım →",
+    "ctaSecondary": "Hizmetlere Bak"
+  },
+  "stats": [
+    { "num": "48s", "label": "İçinde Konsept" },
+    { "num": "3-5", "label": "İş Günü Teslim" },
+    { "num": "100+", "label": "Teslim Edilen Video" },
+    { "num": "1", "label": "Revizyon Hakkı" }
+  ],
+  "services": {
+    "urun": {
+      "tag": "Ürün Tanıtım Videosu",
+      "title": "Ürün görseliniz var,\nreklam filmi hazır",
+      "description": "Kozmetik, kıyafet veya aksesuar satıyorsunuz. Ürünün fotoğrafını gönderin, sinematik bir reklam videosu hazırlayalım. Instagram Reels, TikTok ve e-ticaret sitelerine uygun formatlarda teslim edilir.",
+      "tags": ["Kozmetik", "Kıyafet", "Aksesuar", "E-ticaret", "Reels / TikTok"],
+      "videoUrl": ""
+    },
+    "proje": {
+      "tag": "Proje Tanıtım Videosu",
+      "title": "Projenizi yatırımcıya\nve alıcıya anlatın",
+      "description": "Arsa, konut projesi veya müteahhit tanıtımı için profesyonel video. Fuar standında, satış ofisinde ve dijital reklamlarda kullanıma hazır teslim edilir.",
+      "tags": ["İnşaat", "Arsa", "Gayrimenkul", "Müteahhit"],
+      "videoUrl": ""
+    },
+    "hediye": {
+      "tag": "Hediye Videom",
+      "title": "Fotoğraftan kişisel\nanimatif video",
+      "description": "Sevdiklerinize özel sürpriz. Yıldönümü, evlilik teklifi, doğum günü. Fotoğrafı gönderin, hikayeyi anlatın. Her sipariş sıfırdan üretilir.",
+      "tags": ["Animatif", "Hediye", "Özel Gün"],
+      "videoUrl": ""
+    }
+  },
+  "testimonials": [
+    { "id": 1, "company": "Kozmetik Markası", "quote": "Instagram'da organik erişimimiz iki katına çıktı. Stüdyo masrafı olmadan bu kaliteyi beklemiyordum.", "name": "Ayşe K.", "role": "Marka Sahibi", "initials": "AK", "active": true },
+    { "id": 2, "company": "Müteahhit Firması", "quote": "Arsa projemizin tanıtım videosu fuar standımızda çok ilgi çekti. Beklentinin üzerinde çıktı.", "name": "Murat Ç.", "role": "Proje Müdürü", "initials": "MÇ", "active": true },
+    { "id": 3, "company": "Butik Marka", "quote": "Kıyafet koleksiyonum için şık bir reklam çıkardılar. Süreç düzenliydi, teslim zamanındaydı.", "name": "Selin Y.", "role": "Butik Sahibi", "initials": "SY", "active": true },
+    { "id": 4, "company": "E-ticaret", "quote": "Brief verdim, zamanında teslim aldım. Bir dahaki kampanyada da birlikte çalışacağız.", "name": "Hakan T.", "role": "E-ticaret Satıcısı", "initials": "HT", "active": true },
+    { "id": 5, "company": "Gayrimenkul", "quote": "Konut projemizin videosu çok profesyonel çıktı. Hız ve kalite dengesini çok iyi tuttular.", "name": "Emre N.", "role": "Gayrimenkul Geliştirici", "initials": "EN", "active": true },
+    { "id": 6, "company": "Aksesuar Markası", "quote": "Aksesuar ürünlerimiz için hazırlanan videolar TikTok'ta organik olarak yayıldı.", "name": "Neslihan B.", "role": "Marka Sahibi", "initials": "NB", "active": true },
+    { "id": 7, "company": "Cilt Bakım", "quote": "Cilt bakım serimiz için hazırlanan videolar satışlarımıza doğrudan katkı sağladı.", "name": "Derya K.", "role": "Cilt Bakım Markası", "initials": "DK", "active": true },
+    { "id": 8, "company": "Dijital Mağaza", "quote": "Net iletişim, hızlı teslimat, kaliteli iş. Bir sonraki projede de birlikte çalışacağız.", "name": "Fatih O.", "role": "Dijital Mağaza Sahibi", "initials": "FO", "active": true },
+    { "id": 9, "company": "İnşaat Grubu", "quote": "Üç farklı projemiz için video hazırlattık. Her seferinde beklentimizin üzerinde bir iş çıktı.", "name": "Recep B.", "role": "İnşaat Grubu Ortağı", "initials": "RB", "active": true },
+    { "id": 10, "company": "E-ticaret", "quote": "Meta reklam kampanyamızda videoyu kullandık. Tıklama oranı önceki görsel reklamlara göre çok daha yüksek çıktı.", "name": "Özge A.", "role": "E-ticaret Yöneticisi", "initials": "ÖA", "active": true }
+  ],
+  "brands": [
+    { "id": 1, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 2, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 3, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 4, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 5, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 6, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 7, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 8, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 9, "name": "Marka Adı", "logoUrl": "", "active": true },
+    { "id": 10, "name": "Marka Adı", "logoUrl": "", "active": true }
+  ],
+  "submissions": []
+}
