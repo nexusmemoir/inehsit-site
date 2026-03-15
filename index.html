@@ -4,137 +4,302 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inehsit — Yapay Zeka Reklam Videoları</title>
-<meta name="description" content="Ürün tanıtım, proje tanıtım ve kişiye özel hediye videoları. Stüdyo masrafı olmadan sinematik kalitede reklam videoları üretiyoruz.">
-
-<!-- Google Ads Conversion Tracking placeholder -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXX"></script> -->
-<!-- <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-XXXXXXXXX');</script> -->
-
+<meta name="description" content="Ürün tanıtım, proje tanıtım ve kişiye özel hediye videoları. Stüdyo masrafı olmadan sinematik kalitede.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-/* INDEX-SPECIFIC STYLES */
+
+/* ── HERO ── */
 #hero {
-  padding: 100px 5% 80px;
-  min-height: 92vh;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  padding-top: 66px;
+}
+
+.hero-left {
+  padding: 6% 5% 6% 6%;
   display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
 }
-.hero-bg-shape {
-  position: absolute;
-  width: 700px; height: 700px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(68,117,200,0.06) 0%, transparent 70%);
-  right: -150px; top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-.hero-inner { max-width: 760px; position: relative; z-index: 1; }
+
 .hero-badge {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .72rem; font-weight: 600; letter-spacing: .1em;
   text-transform: uppercase; color: var(--blue);
-  background: var(--blue-light); padding: 0.3rem 0.9rem;
-  border-radius: 100px; margin-bottom: 1.75rem;
+  background: var(--blue-light); padding: .3rem .9rem;
+  border-radius: 100px; margin-bottom: 1.75rem; width: fit-content;
 }
 .badge-dot {
   width: 6px; height: 6px; background: var(--blue);
   border-radius: 50%; animation: blink 2s infinite;
 }
+
 h1 {
   font-family: var(--font-head);
-  font-size: clamp(2.4rem, 5.5vw, 4rem);
-  font-weight: 800; line-height: 1.08;
-  letter-spacing: -0.03em; color: var(--ink); margin-bottom: 1.5rem;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -.03em; color: var(--ink); margin-bottom: 1.5rem;
 }
-h1 span { color: var(--blue); }
-.hero-desc {
-  font-size: 1.1rem; color: var(--ink2);
-  max-width: 520px; line-height: 1.75; margin-bottom: 2.5rem;
-}
-.hero-ctas { display: flex; gap: 0.875rem; flex-wrap: wrap; }
 
-/* STATS BAR */
+.type-wrap {
+  display: block;
+  color: var(--blue);
+  min-height: 1.2em;
+}
+
+.type-cursor {
+  display: inline-block;
+  width: 3px; height: 1em;
+  background: var(--blue);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: cursor-blink .7s infinite;
+}
+
+@keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero-desc {
+  font-size: 1rem; color: var(--ink2);
+  max-width: 420px; line-height: 1.8; margin-bottom: 2.5rem;
+}
+
+.hero-ctas { display: flex; gap: .875rem; flex-wrap: wrap; }
+
+/* HERO RIGHT — VIDEO */
+.hero-right {
+  position: relative;
+  background: var(--ink);
+  overflow: hidden;
+  min-height: 500px;
+}
+
+.hero-video-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.hero-video-wrap video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: .7;
+}
+
+.hero-video-placeholder {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #1a2535 0%, #0e1620 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1rem;
+}
+
+.hero-video-placeholder p {
+  font-family: var(--font-head);
+  font-size: .85rem; color: rgba(255,255,255,.35);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+
+.play-ring {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; color: rgba(255,255,255,.5);
+}
+
+/* ── STATS ── */
 .stats-bar {
-  background: var(--ink); padding: 2rem 5%;
-  display: flex; justify-content: center;
-  gap: 4rem; flex-wrap: wrap;
+  background: var(--ink); padding: 1.75rem 6%;
+  display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;
 }
 .stat { text-align: center; }
 .stat-num {
-  font-family: var(--font-head); font-size: 2rem;
-  font-weight: 800; color: white; letter-spacing: -0.03em;
-  display: block;
+  font-family: var(--font-head); font-size: 1.9rem;
+  font-weight: 800; color: white; display: block;
+  letter-spacing: -.03em;
 }
-.stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.45); font-weight: 500; }
+.stat-label { font-size: .78rem; color: rgba(255,255,255,.4); font-weight: 500; }
 
-/* PRODUCTS */
-.products-grid {
+/* ── HİZMET SECTION — her biri ayrı ── */
+.service-section {
+  padding: 80px 6%;
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 1rem;
-}
-.pcard {
-  background: var(--bg2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 2rem 1.75rem;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  position: relative; text-decoration: none; display: block;
-}
-.pcard:hover {
-  border-color: var(--blue);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 32px rgba(68,117,200,0.09);
-}
-.pcard.featured { background: var(--blue); border-color: var(--blue); }
-.pcard.featured .p-icon,
-.pcard.featured h3,
-.pcard.featured .p-desc { color: rgba(255,255,255,0.92); }
-.pcard.featured .ptag { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: white; }
-.pcard.featured .featured-badge { display: inline-block; }
-.featured-badge {
-  display: none; font-size: 0.68rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  background: rgba(255,255,255,0.2); color: white;
-  padding: 0.2rem 0.65rem; border-radius: 4px; margin-bottom: 1.25rem;
-}
-.p-icon { font-size: 1.8rem; margin-bottom: 1.25rem; display: block; color: var(--ink); }
-.pcard h3 {
-  font-family: var(--font-head); font-size: 1.15rem; font-weight: 700;
-  letter-spacing: -0.02em; margin-bottom: 0.6rem; color: var(--ink);
-}
-.p-desc { font-size: 0.88rem; color: var(--ink2); line-height: 1.7; margin-bottom: 1.25rem; }
-.ptags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.ptag {
-  font-size: 0.72rem; font-weight: 600;
-  background: var(--blue-light); color: var(--blue);
-  padding: 0.2rem 0.6rem; border-radius: 4px;
-  border: 1px solid rgba(68,117,200,0.15);
-}
-.pcard-link {
-  display: inline-flex; align-items: center; gap: 0.35rem;
-  margin-top: 1.25rem; font-size: 0.82rem;
-  font-weight: 600; color: var(--blue);
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
 }
 
-/* HEDIYE CARD (pink accent) */
-.pcard.hediye-card { border-color: rgba(200,68,121,0.2); }
-.pcard.hediye-card:hover { border-color: #c84479; box-shadow: 0 8px 32px rgba(200,68,121,0.09); }
-.pcard.hediye-card .pcard-link { color: #c84479; }
-.pcard.hediye-card .ptag { background: rgba(200,68,121,0.08); border-color: rgba(200,68,121,0.15); color: #c84479; }
+.service-section.reverse { direction: rtl; }
+.service-section.reverse > * { direction: ltr; }
+
+.service-section.bg-white { background: var(--white); }
+.service-section.bg-gray { background: var(--bg2); }
+
+.service-tag {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--blue);
+  background: var(--blue-light); padding: .25rem .75rem;
+  border-radius: 100px; margin-bottom: 1rem;
+}
+
+.service-tag.pink {
+  color: #c84479; background: rgba(200,68,121,.08);
+}
+
+.service-tag.green {
+  color: #2a7a4a; background: rgba(42,122,74,.08);
+}
+
+.service-text h2 { margin-bottom: .875rem; }
+
+.service-desc {
+  color: var(--ink2); line-height: 1.8;
+  margin-bottom: 1.75rem; font-size: .97rem;
+}
+
+.service-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 2rem; }
+.stag {
+  font-size: .72rem; font-weight: 600;
+  background: var(--blue-light); color: var(--blue);
+  padding: .2rem .65rem; border-radius: 4px;
+  border: 1px solid rgba(68,117,200,.15);
+}
+.stag.pink { background: rgba(200,68,121,.08); color: #c84479; border-color: rgba(200,68,121,.15); }
+.stag.green { background: rgba(42,122,74,.08); color: #2a7a4a; border-color: rgba(42,122,74,.15); }
+
+.service-visual {
+  border-radius: 16px; overflow: hidden;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  aspect-ratio: 4/3;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1rem;
+}
+
+.service-visual.blue-bg {
+  background: linear-gradient(135deg, #2855a0 0%, #1a3870 100%);
+  border-color: transparent;
+}
+.service-visual.pink-bg {
+  background: linear-gradient(135deg, #8a1f4f 0%, #5c1234 100%);
+  border-color: transparent;
+}
+.service-visual.dark-bg {
+  background: linear-gradient(135deg, #1a2535 0%, #0e1620 100%);
+  border-color: transparent;
+}
+
+.visual-label {
+  font-family: var(--font-head); font-size: .8rem;
+  font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.5);
+  text-align: center;
+}
+
+.visual-icon-lg { font-size: 3rem; }
+
+/* ── FORM ── */
+#iletisim { padding: 80px 6%; background: var(--white); }
+
+.form-container {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+  max-width: 1100px;
+}
+
+.form-info h2 { margin-bottom: 1rem; }
+.form-info p { color: var(--ink2); line-height: 1.8; margin-bottom: 2rem; }
+
+.form-promise {
+  display: flex; flex-direction: column; gap: .875rem;
+}
+.promise-item {
+  display: flex; align-items: flex-start; gap: .75rem;
+  font-size: .9rem; color: var(--ink2); line-height: 1.5;
+}
+.promise-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--blue-light); border: 1.5px solid rgba(68,117,200,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; color: var(--blue); flex-shrink: 0; margin-top: .1rem;
+}
+
+.form-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+}
+
+.form-group { margin-bottom: 1rem; }
+
+.form-label {
+  display: block; font-size: .8rem; font-weight: 600;
+  color: var(--ink2); margin-bottom: .4rem; letter-spacing: .02em;
+}
+
+.form-input {
+  width: 100%; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  padding: .8rem 1rem; font-size: .93rem;
+  font-family: var(--font-body); color: var(--ink);
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.form-input::placeholder { color: var(--muted); }
+.form-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(68,117,200,.08); }
+
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+.form-select {
+  width: 100%; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  padding: .8rem 1rem; font-size: .93rem;
+  font-family: var(--font-body); color: var(--ink2);
+  outline: none; transition: border-color .2s;
+  -webkit-appearance: none; cursor: pointer;
+}
+.form-select:focus { border-color: var(--blue); }
+.form-select option { background: white; color: var(--ink); }
+
+.btn-submit-new {
+  width: 100%; background: var(--ink);
+  color: white; border: none; padding: 1rem;
+  border-radius: 8px; font-size: .97rem; font-weight: 600;
+  font-family: var(--font-body); cursor: pointer;
+  transition: background .2s, transform .15s;
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  margin-top: .25rem;
+}
+.btn-submit-new:hover { background: var(--blue); transform: translateY(-1px); }
+
+.form-privacy {
+  font-size: .74rem; color: var(--muted);
+  margin-top: .75rem; text-align: center; line-height: 1.5;
+}
+
+.success-box {
+  display: none; margin-top: 1rem;
+  background: var(--blue-light);
+  border: 1.5px solid rgba(68,117,200,.25);
+  border-radius: 10px; padding: 1.25rem;
+  color: var(--blue); font-size: .93rem; font-weight: 500;
+  text-align: center;
+}
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
 @media(max-width:960px){
-  .products-grid { grid-template-columns:1fr 1fr; }
-  nav ul { display:none; }
-  .stats-bar { gap:2rem; }
-}
-@media(max-width:600px){
-  .products-grid { grid-template-columns:1fr; }
+  #hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .service-section { grid-template-columns: 1fr; gap: 2rem; }
+  .service-section.reverse { direction: ltr; }
+  .form-container { grid-template-columns: 1fr; gap: 2.5rem; }
+  .form-grid-2 { grid-template-columns: 1fr; }
+  nav ul { display: none; }
+  .stats-bar { gap: 2rem; }
 }
 </style>
 </head>
@@ -146,26 +311,38 @@ h1 span { color: var(--blue); }
     <img src="data:image/png;base64,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" alt="Inehsit">
   </a>
   <ul>
-    <li class="hide-mobile"><a href="#hizmetler">Hizmetler</a></li>
-    <li class="hide-mobile"><a href="#nasil">Süreç</a></li>
+    <li class="hide-mobile"><a href="#urun">Ürün Tanıtım</a></li>
+    <li class="hide-mobile"><a href="#proje">Proje Tanıtım</a></li>
     <li class="hide-mobile"><a href="#referanslar">Referanslar</a></li>
-    <li class="hide-mobile"><a href="#iletisim" class="btn-nav-ghost">Bilgi Alın</a></li>
-    <li><a href="hediye.html" class="btn-nav-hediye">🎞 Hediye Video</a></li>
+    <li class="hide-mobile"><a href="#iletisim" style="background:var(--ink);color:white;padding:.45rem 1.1rem;border-radius:7px;font-weight:600;font-size:.85rem;">Bilgi Alın</a></li>
+    <li><a href="hediye.html" style="background:linear-gradient(135deg,#c84479,#a8306a);color:white;padding:.5rem 1.2rem;border-radius:7px;font-weight:600;font-size:.85rem;box-shadow:0 2px 10px rgba(200,68,121,.25);">🎞 Hediye Video</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-bg-shape"></div>
-  <div class="hero-inner">
-    <div class="hero-badge"><span class="badge-dot"></span>Yapay Zeka Destekli Video Prodüksiyon</div>
-    <h1>Ürününüzü <span>gerçekten</span><br>izleten reklamlar</h1>
+  <div class="hero-left reveal">
+    <div class="hero-badge"><span class="badge-dot"></span>Yapay Zeka Destekli Video</div>
+    <h1>
+      <span id="type-line" class="type-wrap"></span><span class="type-cursor"></span><br>
+      izleten reklamlar
+    </h1>
     <p class="hero-desc">
       Çekim yok, stüdyo yok, uzun bekleyiş yok. Ürün görselinizi alıyoruz, sosyal medyaya ve reklamlara hazır sinematik video teslim ediyoruz.
     </p>
     <div class="hero-ctas">
       <a href="#iletisim" class="btn-primary">Bilgi Alın, Sizi Arayalım →</a>
-      <a href="#hizmetler" class="btn-outline">Hizmetlere Bak</a>
+      <a href="#urun" class="btn-outline">Hizmetlere Bak</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-video-wrap">
+      <!-- Video hazır olunca buraya ekleyin: -->
+      <!-- <video autoplay muted loop playsinline src="YOUR_VIDEO.mp4"></video> -->
+      <div class="hero-video-placeholder">
+        <div class="play-ring">▶</div>
+        <p>Örnek video buraya gelecek</p>
+      </div>
     </div>
   </div>
 </section>
@@ -175,7 +352,7 @@ h1 span { color: var(--blue); }
   <div class="stat"><span class="stat-num">48s</span><span class="stat-label">İçinde Konsept</span></div>
   <div class="stat"><span class="stat-num">3-5</span><span class="stat-label">İş Günü Teslim</span></div>
   <div class="stat"><span class="stat-num">100+</span><span class="stat-label">Teslim Edilen Video</span></div>
-  <div class="stat"><span class="stat-num">%100</span><span class="stat-label">Müşteri Memnuniyeti</span></div>
+  <div class="stat"><span class="stat-num">1</span><span class="stat-label">Revizyon Hakkı</span></div>
 </div>
 
 <!-- LOGOS -->
@@ -183,86 +360,106 @@ h1 span { color: var(--blue); }
   <p class="logos-label">Birlikte Çalıştığımız Markalar</p>
   <div class="logos-track-wrap">
     <div class="logos-track">
-      <div class="logo-pill"><span>Marka 1</span></div><div class="logo-pill"><span>Marka 2</span></div><div class="logo-pill"><span>Marka 3</span></div><div class="logo-pill"><span>Marka 4</span></div><div class="logo-pill"><span>Marka 5</span></div><div class="logo-pill"><span>Marka 6</span></div><div class="logo-pill"><span>Marka 7</span></div><div class="logo-pill"><span>Marka 8</span></div><div class="logo-pill"><span>Marka 9</span></div><div class="logo-pill"><span>Marka 10</span></div><div class="logo-pill"><span>Marka 1</span></div><div class="logo-pill"><span>Marka 2</span></div><div class="logo-pill"><span>Marka 3</span></div><div class="logo-pill"><span>Marka 4</span></div><div class="logo-pill"><span>Marka 5</span></div><div class="logo-pill"><span>Marka 6</span></div><div class="logo-pill"><span>Marka 7</span></div><div class="logo-pill"><span>Marka 8</span></div><div class="logo-pill"><span>Marka 9</span></div><div class="logo-pill"><span>Marka 10</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
+      <div class="logo-pill"><span>Marka Adı</span></div>
     </div>
   </div>
 </div>
 
-<!-- HİZMETLER -->
-<section id="hizmetler" class="section section-white">
-  <span class="sec-tag">Hizmetler</span>
-  <h2>Hangi sektördeyseniz,<br>size özel bir formatımız var</h2>
-  <p class="sec-desc">Her müşteri kitlesi farklı. Bu yüzden her ürün gamı kendi iş mantığıyla çalışır.</p>
-
-  <div class="products-grid reveal">
-
-    <div class="pcard featured">
-      <span class="featured-badge">En Çok Tercih Edilen</span>
-      <span class="p-icon">🎬</span>
-      <h3>Ürün Tanıtım Videosu</h3>
-      <p class="p-desc">Kozmetik, kıyafet veya aksesuar satıyorsunuz. Ürün görselinizi gönderin, sinematik reklam videosu hazırlayalım. Instagram Reels, TikTok ve e-ticaret sitelerine uygun formatlarda.</p>
-      <div class="ptags">
-        <span class="ptag">Kozmetik</span>
-        <span class="ptag">Kıyafet</span>
-        <span class="ptag">Aksesuar</span>
-        <span class="ptag">E-ticaret</span>
-        <span class="ptag">Reels / TikTok</span>
-      </div>
+<!-- HİZMET 1: ÜRÜN TANITIM -->
+<section id="urun" class="service-section bg-white reveal">
+  <div class="service-text">
+    <span class="service-tag">Ürün Tanıtım Videosu</span>
+    <h2>Ürün görseliniz var,<br>reklam filmi hazır</h2>
+    <p class="service-desc">
+      Kozmetik, kıyafet veya aksesuar satıyorsunuz. Ürünün fotoğrafını gönderin, sinematik bir reklam videosu hazırlayalım. Instagram Reels, TikTok ve e-ticaret sitelerine uygun formatlarda teslim edilir.
+    </p>
+    <div class="service-tags">
+      <span class="stag">Kozmetik</span>
+      <span class="stag">Kıyafet</span>
+      <span class="stag">Aksesuar</span>
+      <span class="stag">E-ticaret</span>
+      <span class="stag">Reels / TikTok</span>
     </div>
-
-    <div class="pcard">
-      <span class="p-icon">🏗️</span>
-      <h3>Proje Tanıtım Videosu</h3>
-      <p class="p-desc">Arsa, konut projesi veya müteahhit tanıtımı için profesyonel video. Yatırımcıya ve alıcıya aynı anda konuşur.</p>
-      <div class="ptags">
-        <span class="ptag">İnşaat</span>
-        <span class="ptag">Arsa</span>
-        <span class="ptag">Gayrimenkul</span>
-      </div>
-    </div>
-
-    <a href="hediye.html" class="pcard hediye-card">
-      <span class="p-icon">🎞️</span>
-      <h3>Hediye Videom</h3>
-      <p class="p-desc">Fotoğraftan animatif, kişiselleştirilmiş video. Yıldönümü, evlilik teklifi, doğum günü. Sevdiklerinize özel sürpriz.</p>
-      <div class="ptags">
-        <span class="ptag">Animatif</span>
-        <span class="ptag">Hediye</span>
-        <span class="ptag">Özel Gün</span>
-      </div>
-      <span class="pcard-link">Sayfaya Git →</span>
-    </a>
-
+    <a href="#iletisim" class="btn-primary">Teklif Alın →</a>
+  </div>
+  <div class="service-visual blue-bg">
+    <div class="visual-icon-lg" style="font-size:3rem;opacity:.3;">▶</div>
+    <p class="visual-label">Örnek video buraya</p>
   </div>
 </section>
 
-<!-- NASIL ÇALIŞIR -->
-<section id="nasil" class="section">
+<!-- HİZMET 2: PROJE TANITIM -->
+<section id="proje" class="service-section bg-gray reverse reveal">
+  <div class="service-text">
+    <span class="service-tag green">Proje Tanıtım Videosu</span>
+    <h2>Projenizi yatırımcıya<br>ve alıcıya anlatın</h2>
+    <p class="service-desc">
+      Arsa, konut projesi veya müteahhit tanıtımı için profesyonel video. Fuar standında, satış ofisinde ve dijital reklamlarda kullanıma hazır teslim edilir.
+    </p>
+    <div class="service-tags">
+      <span class="stag green">İnşaat</span>
+      <span class="stag green">Arsa</span>
+      <span class="stag green">Gayrimenkul</span>
+      <span class="stag green">Müteahhit</span>
+    </div>
+    <a href="#iletisim" class="btn-primary">Teklif Alın →</a>
+  </div>
+  <div class="service-visual dark-bg">
+    <div class="visual-icon-lg" style="font-size:3rem;opacity:.3;">▶</div>
+    <p class="visual-label">Örnek video buraya</p>
+  </div>
+</section>
+
+<!-- HİZMET 3: HEDİYE VIDEO -->
+<section id="hediye-preview" class="service-section bg-white reveal">
+  <div class="service-text">
+    <span class="service-tag pink">Hediye Videom</span>
+    <h2>Fotoğraftan kişisel<br>animatif video</h2>
+    <p class="service-desc">
+      Sevdiklerinize özel sürpriz. Yıldönümü, evlilik teklifi, doğum günü. Fotoğrafı gönderin, hikayeyi anlatın. Her sipariş sıfırdan üretilir.
+    </p>
+    <div class="service-tags">
+      <span class="stag pink">Animatif</span>
+      <span class="stag pink">Hediye</span>
+      <span class="stag pink">Özel Gün</span>
+    </div>
+    <a href="hediye.html" class="btn-primary" style="background:#c84479;">Sayfaya Git →</a>
+  </div>
+  <div class="service-visual pink-bg">
+    <div class="visual-icon-lg" style="font-size:3rem;opacity:.3;">▶</div>
+    <p class="visual-label">Örnek video buraya</p>
+  </div>
+</section>
+
+<!-- SÜREÇ -->
+<section id="nasil" class="section" style="background:var(--bg2);">
   <span class="sec-tag">Süreç</span>
   <h2>Dört adım, net takvim</h2>
-  <p class="sec-desc">Revizyon sayısı bellidir, teslim tarihi bellidir. Sürpriz olmaz.</p>
-
+  <p class="sec-desc">Revizyon sayısı bellidir, teslim tarihi bellidir.</p>
   <div class="steps-grid reveal">
-    <div class="step">
-      <div class="step-num">01</div>
-      <h4>Bilgi Formu</h4>
-      <p>Ürününüzü, hedefinizi ve beklentilerinizi form üzerinden iletiyorsunuz. Sizi arıyoruz.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <h4>Konsept Onayı</h4>
-      <p>48 saat içinde sahne planını ve görsel yönü paylaşıyoruz. Onayınızı aldıktan sonra başlıyoruz.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <h4>Prodüksiyon</h4>
-      <p>Yapay zeka araçlarıyla video üretiliyor. 3 ila 5 iş günü içinde taslak hazır.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <h4>Teslimat</h4>
-      <p>Bir revizyon hakkı dahil. Sosyal medya ve reklam kampanyalarına hazır formatlarda teslim ediyoruz.</p>
-    </div>
+    <div class="step"><div class="step-num">01</div><h4>Bilgi Formu</h4><p>Ürününüzü, hedefinizi ve beklentilerinizi form üzerinden iletiyorsunuz. Sizi arıyoruz.</p></div>
+    <div class="step"><div class="step-num">02</div><h4>Konsept Onayı</h4><p>48 saat içinde sahne planını ve görsel yönü paylaşıyoruz. Onayınızı aldıktan sonra başlıyoruz.</p></div>
+    <div class="step"><div class="step-num">03</div><h4>Prodüksiyon</h4><p>Yapay zeka araçlarıyla video üretiliyor. 3 ila 5 iş günü içinde taslak hazır.</p></div>
+    <div class="step"><div class="step-num">04</div><h4>Teslimat</h4><p>Bir revizyon hakkı dahil. Sosyal medya ve reklam kampanyalarına hazır formatlarda teslim.</p></div>
   </div>
 </section>
 
@@ -271,127 +468,85 @@ h1 span { color: var(--blue); }
   <span class="sec-tag">Referanslar</span>
   <h2>Müşterilerimizden</h2>
   <p class="sec-desc">Gerçek projeler, gerçek geri dönüşler.</p>
-
   <div class="tgrid reveal">
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Kozmetik Markası</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Instagram'da organik erişimimiz iki katına çıktı. Stüdyo masrafı olmadan bu kaliteyi beklemiyordum.</p>
-      <div class="tauthor"><div class="avatar">AK</div><div><strong>Ayşe K.</strong><span>Marka Sahibi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Müteahhit Firması</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Arsa projemizin tanıtım videosu fuar standımızda çok ilgi çekti. Beklentinin üzerinde çıktı.</p>
-      <div class="tauthor"><div class="avatar">MÇ</div><div><strong>Murat Ç.</strong><span>Proje Müdürü</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Butik Marka</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Kıyafet koleksiyonum için şık bir reklam çıkardılar. Süreç düzenliydi, teslim zamanındaydı.</p>
-      <div class="tauthor"><div class="avatar">SY</div><div><strong>Selin Y.</strong><span>Butik Sahibi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">E-ticaret</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Brief verdim, zamanında teslim aldım. Bir dahaki kampanyada da birlikte çalışacağız.</p>
-      <div class="tauthor"><div class="avatar">HT</div><div><strong>Hakan T.</strong><span>E-ticaret Satıcısı</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Gayrimenkul</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Konut projemizin videosu çok profesyonel çıktı. Hız ve kalite dengesini çok iyi tuttular.</p>
-      <div class="tauthor"><div class="avatar">EN</div><div><strong>Emre N.</strong><span>Gayrimenkul Geliştirici</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Aksesuar Markası</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Aksesuar ürünlerimiz için hazırlanan videolar TikTok'ta organik olarak yayıldı. Çok memnun kaldık.</p>
-      <div class="tauthor"><div class="avatar">NB</div><div><strong>Neslihan B.</strong><span>Marka Sahibi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Cilt Bakım</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Cilt bakım serimiz için hazırlanan videolar satışlarımıza doğrudan katkı sağladı.</p>
-      <div class="tauthor"><div class="avatar">DK</div><div><strong>Derya K.</strong><span>Cilt Bakım Markası</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">Dijital Mağaza</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Net iletişim, hızlı teslimat, kaliteli iş. Bir sonraki projede de birlikte çalışacağız.</p>
-      <div class="tauthor"><div class="avatar">FO</div><div><strong>Fatih O.</strong><span>Dijital Mağaza Sahibi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">İnşaat Grubu</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Üç farklı projemiz için video hazırlattık. Her seferinde beklentimizin üzerinde bir iş çıktı.</p>
-      <div class="tauthor"><div class="avatar">RB</div><div><strong>Recep B.</strong><span>İnşaat Grubu Ortağı</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo">E-ticaret</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <p class="tquote">Meta reklam kampanyamızda videoyu kullandık. Önceki görsel reklamlara göre tıklama oranı çok daha yüksek çıktı.</p>
-      <div class="tauthor"><div class="avatar">ÖA</div><div><strong>Özge A.</strong><span>E-ticaret Yöneticisi</span></div></div>
-    </div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Kozmetik Markası</span><span class="stars">★★★★★</span></div><p class="tquote">Instagram'da organik erişimimiz iki katına çıktı. Stüdyo masrafı olmadan bu kaliteyi beklemiyordum.</p><div class="tauthor"><div class="avatar">AK</div><div><strong>Ayşe K.</strong><span>Marka Sahibi</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Müteahhit Firması</span><span class="stars">★★★★★</span></div><p class="tquote">Arsa projemizin tanıtım videosu fuar standımızda çok ilgi çekti. Beklentinin üzerinde çıktı.</p><div class="tauthor"><div class="avatar">MÇ</div><div><strong>Murat Ç.</strong><span>Proje Müdürü</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Butik Marka</span><span class="stars">★★★★★</span></div><p class="tquote">Kıyafet koleksiyonum için şık bir reklam çıkardılar. Süreç düzenliydi, teslim zamanındaydı.</p><div class="tauthor"><div class="avatar">SY</div><div><strong>Selin Y.</strong><span>Butik Sahibi</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">E-ticaret</span><span class="stars">★★★★★</span></div><p class="tquote">Brief verdim, zamanında teslim aldım. Bir dahaki kampanyada da birlikte çalışacağız.</p><div class="tauthor"><div class="avatar">HT</div><div><strong>Hakan T.</strong><span>E-ticaret Satıcısı</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Gayrimenkul</span><span class="stars">★★★★★</span></div><p class="tquote">Konut projemizin videosu çok profesyonel çıktı. Hız ve kalite dengesini çok iyi tuttular.</p><div class="tauthor"><div class="avatar">EN</div><div><strong>Emre N.</strong><span>Gayrimenkul Geliştirici</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Aksesuar Markası</span><span class="stars">★★★★★</span></div><p class="tquote">Aksesuar ürünlerimiz için hazırlanan videolar TikTok'ta organik olarak yayıldı.</p><div class="tauthor"><div class="avatar">NB</div><div><strong>Neslihan B.</strong><span>Marka Sahibi</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Cilt Bakım</span><span class="stars">★★★★★</span></div><p class="tquote">Cilt bakım serimiz için hazırlanan videolar satışlarımıza doğrudan katkı sağladı.</p><div class="tauthor"><div class="avatar">DK</div><div><strong>Derya K.</strong><span>Cilt Bakım Markası</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">Dijital Mağaza</span><span class="stars">★★★★★</span></div><p class="tquote">Net iletişim, hızlı teslimat, kaliteli iş. Bir sonraki projede de birlikte çalışacağız.</p><div class="tauthor"><div class="avatar">FO</div><div><strong>Fatih O.</strong><span>Dijital Mağaza Sahibi</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">İnşaat Grubu</span><span class="stars">★★★★★</span></div><p class="tquote">Üç farklı projemiz için video hazırlattık. Her seferinde beklentimizin üzerinde bir iş çıktı.</p><div class="tauthor"><div class="avatar">RB</div><div><strong>Recep B.</strong><span>İnşaat Grubu Ortağı</span></div></div></div>
+    <div class="tcard"><div class="tcard-top"><span class="tcard-logo">E-ticaret</span><span class="stars">★★★★★</span></div><p class="tquote">Meta reklam kampanyamızda videoyu kullandık. Tıklama oranı önceki görsel reklamlara göre çok daha yüksek çıktı.</p><div class="tauthor"><div class="avatar">ÖA</div><div><strong>Özge A.</strong><span>E-ticaret Yöneticisi</span></div></div></div>
   </div>
 </section>
 
-<!-- İLETİŞİM / FORM -->
-<section id="iletisim" class="section section-gray">
-  <div class="form-wrap">
-    <span class="sec-tag">İletişim</span>
-    <h2>Formu doldurun,<br>sizi arayalım</h2>
-    <p class="sec-desc">Ne istediğinizi anlayalım, size en uygun süreci ve fiyatı anlatalım.</p>
-
-    <div class="form-fields">
-      <div class="form-row-2">
-        <input type="text" placeholder="Adınız Soyadınız" id="f-name">
-        <input type="tel" placeholder="Telefon Numaranız" id="f-phone">
+<!-- İLETİŞİM FORMU -->
+<section id="iletisim">
+  <div class="form-container reveal">
+    <div class="form-info">
+      <span class="sec-tag">İletişim</span>
+      <h2>Formu doldurun,<br>sizi arayalım</h2>
+      <p>Ne istediğinizi anlayalım, size en uygun süreci ve fiyatı anlatalım. Teklif almak için form yeterli.</p>
+      <div class="form-promise">
+        <div class="promise-item">
+          <span class="promise-dot">✓</span>
+          <span>1 iş günü içinde sizi arıyoruz</span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-dot">✓</span>
+          <span>48 saat içinde konsept ve fiyat teklifi</span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-dot">✓</span>
+          <span>Onaydan 3 ila 5 iş günü içinde teslim</span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-dot">✓</span>
+          <span>1 revizyon hakkı dahil her pakete</span>
+        </div>
       </div>
-      <input type="text" placeholder="İşletme veya Marka Adı" id="f-brand">
-      <input type="email" placeholder="E-posta Adresiniz" id="f-email">
-      <select id="f-service">
-        <option value="" disabled selected>Hangi hizmetle ilgileniyorsunuz?</option>
-        <option>Ürün Tanıtım Videosu</option>
-        <option>Proje Tanıtım Videosu</option>
-        <option>Hediye Videom</option>
-        <option>Henüz karar vermedim</option>
-      </select>
     </div>
 
-    <button class="btn-submit" onclick="submitForm('index')">Formu Gönder, Sizi Arayalım</button>
-    <p class="form-note">Bilgileriniz yalnızca size ulaşmak için kullanılır. Spam gönderilmez.</p>
-    <div class="success-box" id="success-box">
-      Talebiniz alındı. En geç 1 iş günü içinde sizi arıyoruz.
+    <div class="form-card">
+      <form id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Ad Soyad</label>
+            <input type="text" name="name" class="form-input" placeholder="Adınız" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefon</label>
+            <input type="tel" name="phone" class="form-input" placeholder="+90 5__ ___ __ __" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">İşletme / Marka Adı</label>
+          <input type="text" name="brand" class="form-input" placeholder="Varsa yazın">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-posta</label>
+          <input type="email" name="email" class="form-input" placeholder="ornek@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">İlgilendiğiniz Hizmet</label>
+          <select name="service" class="form-select">
+            <option value="" disabled selected>Seçin</option>
+            <option>Ürün Tanıtım Videosu</option>
+            <option>Proje Tanıtım Videosu</option>
+            <option>Hediye Videom</option>
+            <option>Henüz karar vermedim</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit-new">
+          Formu Gönder, Sizi Arayalım →
+        </button>
+        <p class="form-privacy">Bilgileriniz yalnızca size ulaşmak için kullanılır.</p>
+      </form>
+      <div class="success-box" id="successBox">
+        Talebiniz alındı. En geç 1 iş günü içinde sizi arıyoruz.
+      </div>
     </div>
   </div>
 </section>
@@ -402,12 +557,62 @@ h1 span { color: var(--blue); }
   </div>
   <p>© 2025 Inehsit. Tüm hakları saklıdır.</p>
   <div class="footer-links">
-    <a href="gizlilik.html">Gizlilik Politikası</a>
-    <a href="sartlar.html">Kullanım Şartları</a>
+    <a href="gizlilik.html">Gizlilik</a>
+    <a href="sartlar.html">Şartlar</a>
     <a href="mailto:info@inehsit.io">info@inehsit.io</a>
   </div>
 </footer>
 
 <script src="shared.js"></script>
+<script>
+// Typewriter effect
+const phrases = [
+  "Ürününüzü gerçekten",
+  "Markanızı öne çıkaran",
+  "Müşterinizi harekete geçiren",
+  "Satışlarınızı artıran"
+];
+let pi = 0, ci = 0, deleting = false;
+const el = document.getElementById("type-line");
+
+function type() {
+  const phrase = phrases[pi];
+  if (!deleting) {
+    el.textContent = phrase.slice(0, ++ci);
+    if (ci === phrase.length) { deleting = true; setTimeout(type, 2000); return; }
+  } else {
+    el.textContent = phrase.slice(0, --ci);
+    if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+  }
+  setTimeout(type, deleting ? 40 : 80);
+}
+type();
+
+// Form
+document.getElementById("contactForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector(".btn-submit-new");
+  btn.textContent = "Gönderiliyor...";
+  btn.disabled = true;
+  
+  try {
+    const res = await fetch(this.action, {
+      method: "POST",
+      body: new FormData(this),
+      headers: { "Accept": "application/json" }
+    });
+    if (res.ok) {
+      this.style.display = "none";
+      document.getElementById("successBox").style.display = "block";
+    } else {
+      btn.textContent = "Hata oluştu, tekrar deneyin";
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = "Hata oluştu, tekrar deneyin";
+    btn.disabled = false;
+  }
+});
+</script>
 </body>
 </html>
