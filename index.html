@@ -566,40 +566,137 @@ h1 {
 <script src="shared.js"></script>
 <script>
 // Typewriter effect
-const phrases = [
-  "Ürününüzü gerçekten",
-  "Markanızı öne çıkaran",
-  "Müşterinizi harekete geçiren",
-  "Satışlarınızı artıran"
-];
+// ── Dynamic content from API ──────────────────────────────
+let phrases = ["Ürününüzü gerçekten","Markanızı öne çıkaran","Müşterinizi harekete geçiren","Satışlarınızı artıran"];
 let pi = 0, ci = 0, deleting = false;
-const el = document.getElementById("type-line");
+const typeEl = document.getElementById("type-line");
 
 function type() {
   const phrase = phrases[pi];
   if (!deleting) {
-    el.textContent = phrase.slice(0, ++ci);
+    typeEl.textContent = phrase.slice(0, ++ci);
     if (ci === phrase.length) { deleting = true; setTimeout(type, 2000); return; }
   } else {
-    el.textContent = phrase.slice(0, --ci);
+    typeEl.textContent = phrase.slice(0, --ci);
     if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
   }
   setTimeout(type, deleting ? 40 : 80);
 }
-type();
 
-// Form
+async function loadContent() {
+  try {
+    const res = await fetch('/api/content');
+    if (!res.ok) return;
+    const d = await res.json();
+
+    // Hero
+    if (d.hero) {
+      if (d.hero.typewriterPhrases?.length) phrases = d.hero.typewriterPhrases;
+      if (d.hero.title2) {
+        const t2 = document.querySelector('#hero h1');
+        if (t2) {
+          // keep type-line span, update second line
+          const lines = t2.innerHTML.split('<br>');
+          if (lines.length > 1) t2.innerHTML = lines[0] + '<br>' + d.hero.title2;
+        }
+      }
+      if (d.hero.description) {
+        const desc = document.querySelector('.hero-desc');
+        if (desc) desc.textContent = d.hero.description;
+      }
+      if (d.hero.badge) {
+        const badge = document.querySelector('.hero-badge');
+        if (badge) badge.innerHTML = '<span class="badge-dot"></span>' + d.hero.badge;
+      }
+      // Hero video
+      if (d.hero.videoUrl) {
+        const placeholder = document.querySelector('.hero-video-placeholder');
+        if (placeholder) {
+          const wrap = placeholder.parentElement;
+          placeholder.style.display = 'none';
+          const v = document.createElement('video');
+          v.src = d.hero.videoUrl;
+          v.autoplay = true; v.muted = true; v.loop = true; v.playsInline = true;
+          v.style.cssText = 'width:100%;height:100%;object-fit:cover;opacity:.7;';
+          wrap.appendChild(v);
+        }
+      }
+    }
+
+    // Stats
+    if (d.stats?.length) {
+      const bar = document.querySelector('.stats-bar');
+      if (bar) bar.innerHTML = d.stats.map(s =>
+        `<div class="stat"><span class="stat-num">${s.num}</span><span class="stat-label">${s.label}</span></div>`
+      ).join('');
+    }
+
+    // Services
+    if (d.services) {
+      ['urun','proje','hediye'].forEach(key => {
+        const sv = d.services[key];
+        if (!sv) return;
+        const sec = document.getElementById(key === 'hediye' ? 'hediye-preview' : key);
+        if (!sec) return;
+        const tagEl = sec.querySelector('.service-tag');
+        if (tagEl) tagEl.textContent = sv.tag;
+        const h2 = sec.querySelector('h2');
+        if (h2) h2.innerHTML = sv.title?.replace(/\n/g,'<br>');
+        const descEl = sec.querySelector('.service-desc');
+        if (descEl) descEl.textContent = sv.description;
+        const tagsEl = sec.querySelector('.service-tags');
+        if (tagsEl && sv.tags) tagsEl.innerHTML = sv.tags.map(t =>
+          `<span class="stag ${key==='proje'?'green':key==='hediye'?'pink':''}">${t}</span>`
+        ).join('');
+        if (sv.videoUrl) {
+          const vis = sec.querySelector('.service-visual');
+          if (vis) {
+            vis.innerHTML = `<video src="${sv.videoUrl}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:14px"></video>`;
+          }
+        }
+      });
+    }
+
+    // Testimonials
+    if (d.testimonials?.length) {
+      const grid = document.querySelector('.tgrid');
+      if (grid) grid.innerHTML = d.testimonials.map(t => `
+        <div class="tcard">
+          <div class="tcard-top"><span class="tcard-logo">${t.company||''}</span><span class="stars">★★★★★</span></div>
+          <p class="tquote">${t.quote||''}</p>
+          <div class="tauthor"><div class="avatar">${t.initials||'?'}</div><div><strong>${t.name||''}</strong><span>${t.role||''}</span></div></div>
+        </div>
+      `).join('');
+    }
+
+    // Brands marquee
+    if (d.brands?.length) {
+      const track = document.querySelector('.logos-track');
+      if (track) {
+        const double = [...d.brands, ...d.brands];
+        track.innerHTML = double.map(b =>
+          `<div class="logo-pill">${b.logoUrl ? `<img src="${b.logoUrl}" alt="${b.name}" style="height:24px;width:auto;opacity:.6">` : `<span>${b.name}</span>`}</div>`
+        ).join('');
+      }
+    }
+
+  } catch(e) { console.error('Content load error:', e); }
+}
+
+loadContent().then(() => type());
+
+// Form — submit to local API
 document.getElementById("contactForm").addEventListener("submit", async function(e) {
   e.preventDefault();
   const btn = this.querySelector(".btn-submit-new");
   btn.textContent = "Gönderiliyor...";
   btn.disabled = true;
-  
+  const data = Object.fromEntries(new FormData(this));
   try {
-    const res = await fetch(this.action, {
-      method: "POST",
-      body: new FormData(this),
-      headers: { "Accept": "application/json" }
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
     if (res.ok) {
       this.style.display = "none";
