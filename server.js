@@ -2,11 +2,33 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
+const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const sessions = new Map();
+
+// Ensure uploads dir exists
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+// Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + '-' + crypto.randomBytes(4).toString('hex') + ext);
+  }
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp|svg|mp4|webm|mov/i;
+    cb(null, allowed.test(path.extname(file.originalname)));
+  }
+});
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname)));
@@ -141,5 +163,14 @@ app.get('/gizlilik', (req, res) => res.sendFile(path.join(__dirname, 'gizlilik.h
 app.get('/sartlar', (req, res) => res.sendFile(path.join(__dirname, 'sartlar.html')));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+
+// Serve uploaded files
+app.use('/uploads', express.static(UPLOADS_DIR));
+
+// Upload endpoint (admin only)
+app.post('/api/admin/upload', auth, upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file' });
+  res.json({ url: '/uploads/' + req.file.filename });
+});
 
 app.listen(PORT, () => console.log(`Inehsit running on port ${PORT}`));

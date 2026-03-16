@@ -929,11 +929,7 @@ function renderHeroTab() {
         </div>
         <div class="form-full"><label class="label">Başlık 2. Satır</label><input class="input" id="h-title2" value="${h.title2||''}"></div>
         <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="h-desc">${h.description||''}</textarea></div>
-        <div class="form-full">
-          <label class="label">Hero Video URL</label>
-          <input class="input" id="h-video" value="${h.videoUrl||''}" placeholder="https://... (mp4 veya YouTube embed)">
-          <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem">Boş bırakılırsa placeholder görünür</p>
-        </div>
+        ${fileUploadWidget('h-video', h.videoUrl||'', 'video/mp4,video/webm,video/mov', 'Hero Video (mp4 veya webm, max 50MB)')}
         <button class="btn btn-primary" onclick="saveHero()">Kaydet</button>
       </div>
     </div>
@@ -948,7 +944,7 @@ async function saveHero() {
       typewriterPhrases: phrases,
       title2: document.getElementById('h-title2').value,
       description: document.getElementById('h-desc').value,
-      videoUrl: document.getElementById('h-video').value
+      videoUrl: document.getElementById('h-video-url').value
     }
   });
   toast('Hero kaydedildi', 'success');
@@ -964,7 +960,7 @@ function renderServicesTab() {
         <div class="section-body">
           <div class="form-row">
             <div><label class="label">Tag</label><input class="input" id="sv-${key}-tag" value="${sv.tag||''}"></div>
-            <div><label class="label">Video URL</label><input class="input" id="sv-${key}-video" value="${sv.videoUrl||''}" placeholder="https://..."></div>
+            <div></div>
           </div>
           <div class="form-full"><label class="label">Başlık</label><input class="input" id="sv-${key}-title" value="${(sv.title||'').replace(/\n/g,' ')}"></div>
           <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="sv-${key}-desc">${sv.description||''}</textarea></div>
@@ -972,6 +968,7 @@ function renderServicesTab() {
             <label class="label">Etiketler (virgülle ayırın)</label>
             <input class="input" id="sv-${key}-tags" value="${(sv.tags||[]).join(', ')}">
           </div>
+          ${fileUploadWidget('sv-'+key+'-video', sv.videoUrl||'', 'video/mp4,video/webm,image/jpeg,image/png,image/webp', 'Video veya Görsel (mp4, png, jpg)')}
           <button class="btn btn-ghost btn-sm" onclick="saveService('${key}')">Kaydet</button>
         </div>
       </div>
@@ -987,7 +984,7 @@ async function saveService(key) {
     title: document.getElementById(`sv-${key}-title`).value,
     description: document.getElementById(`sv-${key}-desc`).value,
     tags,
-    videoUrl: document.getElementById(`sv-${key}-video`).value
+    videoUrl: document.getElementById(`sv-${key}-video-url`).value
   };
   await api('PUT', '/api/admin/content', update);
   toast('Hizmet kaydedildi', 'success');
@@ -1047,7 +1044,62 @@ async function saveSettings() {
   document.getElementById('set-newPass2').value = '';
 }
 
-// ── UTILS ─────────────────────────────────────────────────
+// ── FILE UPLOAD HELPER ────────────────────────────────────
+async function uploadFile(file) {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch('/api/admin/upload', {
+    method: 'POST',
+    headers: { 'x-admin-token': TOKEN },
+    body: form
+  });
+  if (!res.ok) throw new Error('Upload failed');
+  const d = await res.json();
+  return d.url;
+}
+
+function fileUploadWidget(id, currentUrl, accept, label) {
+  return `
+    <div style="margin-bottom:1rem">
+      <label class="label">${label}</label>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <input class="input" id="${id}-url" value="${currentUrl||''}" placeholder="URL girin veya dosya yükleyin" style="flex:1">
+        <label style="cursor:pointer;flex-shrink:0">
+          <span class="btn btn-ghost btn-sm">📁 Dosya Seç</span>
+          <input type="file" accept="${accept}" style="display:none" onchange="handleUpload('${id}',this)">
+        </label>
+      </div>
+      <div id="${id}-preview" style="margin-top:.5rem">${currentUrl ? previewHtml(currentUrl) : ''}</div>
+      <div id="${id}-progress" style="display:none;font-size:.78rem;color:var(--blue);margin-top:.3rem">Yükleniyor...</div>
+    </div>
+  `;
+}
+
+function previewHtml(url) {
+  if (!url) return '';
+  if (/\.(mp4|webm|mov)/i.test(url)) {
+    return `<video src="${url}" controls style="max-width:100%;max-height:140px;border-radius:6px;margin-top:.3rem"></video>`;
+  }
+  return `<img src="${url}" style="max-height:80px;border-radius:6px;margin-top:.3rem;object-fit:contain">`;
+}
+
+async function handleUpload(id, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const prog = document.getElementById(id + '-progress');
+  prog.style.display = 'block';
+  prog.textContent = 'Yükleniyor...';
+  try {
+    const url = await uploadFile(file);
+    document.getElementById(id + '-url').value = url;
+    document.getElementById(id + '-preview').innerHTML = previewHtml(url);
+    prog.style.display = 'none';
+    toast('Dosya yüklendi', 'success');
+  } catch {
+    prog.textContent = 'Hata oluştu';
+    toast('Yükleme hatası', 'error');
+  }
+}
 function fmtDate(iso) {
   if (!iso) return '—';
   return new Date(iso).toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });

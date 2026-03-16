@@ -683,7 +683,8 @@ async function loadContent() {
   } catch(e) { console.error('Content load error:', e); }
 }
 
-loadContent().then(() => type());
+type(); // start immediately with default phrases
+loadContent(); // update phrases and content from API async
 
 // Form — submit to local API
 document.getElementById("contactForm").addEventListener("submit", async function(e) {
