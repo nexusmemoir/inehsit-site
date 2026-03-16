@@ -6,8 +6,11 @@ const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'data.json');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const DATA_DIR = process.env.RENDER_DISK_PATH || '/var/data';
+// Fallback to __dirname if /var/data doesn't exist (local dev)
+const DATA_DIR_FINAL = require('fs').existsSync('/var/data') ? '/var/data' : __dirname;
+const DATA_FILE = path.join(DATA_DIR_FINAL, 'data.json');
+const UPLOADS_DIR = path.join(DATA_DIR_FINAL, 'uploads');
 const sessions = new Map();
 
 // Ensure uploads dir exists
