@@ -202,7 +202,8 @@ app.post('/api/submit', (req, res) => {
   writeData(data); res.json({ ok: true });
 });
 
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/panel-x7k2', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/admin', (req, res) => res.redirect('/'));
 app.get('/hediye', (req, res) => res.sendFile(path.join(__dirname, 'hediye.html')));
 app.get('/tesekkur', (req, res) => res.sendFile(path.join(__dirname, 'tesekkur.html')));
 app.get('/gizlilik', (req, res) => res.sendFile(path.join(__dirname, 'gizlilik.html')));
