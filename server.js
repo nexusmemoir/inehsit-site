@@ -64,6 +64,7 @@ const upload = multer({
 });
 
 app.use(express.json({ limit: '10mb' }));
+app.use('/uploads', express.static(UPLOADS_DIR));
 app.use(express.static(path.join(__dirname)));
 
 function readData() {
@@ -208,9 +209,6 @@ app.get('/gizlilik', (req, res) => res.sendFile(path.join(__dirname, 'gizlilik.h
 app.get('/sartlar', (req, res) => res.sendFile(path.join(__dirname, 'sartlar.html')));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-
-// Serve uploaded files
-app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Upload endpoint (admin only)
 app.post('/api/admin/upload', auth, upload.single('file'), (req, res) => {
