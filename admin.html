@@ -500,9 +500,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
           <input class="input" id="t-role" placeholder="Marka Sahibi">
         </div>
         <div>
-          <label class="label">Baş Harfler (Avatar)</label>
+          <label class="label">Baş Harfler (Avatar yoksa)</label>
           <input class="input" id="t-initials" placeholder="AK" maxlength="2">
         </div>
+      </div>
+      <div class="form-full">
+        <label class="label">Avatar Fotoğrafı (opsiyonel)</label>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <input class="input" id="t-avatarUrl" placeholder="Yüklenen fotoğraf URL'si" style="flex:1">
+          <label style="cursor:pointer;flex-shrink:0">
+            <span class="btn btn-ghost btn-sm">📁 Fotoğraf Seç</span>
+            <input type="file" accept="image/*" style="display:none" onchange="handleUpload('t-avatar',this)">
+          </label>
+        </div>
+        <div id="t-avatar-preview" style="margin-top:.5rem"></div>
+        <div id="t-avatar-progress" style="display:none;font-size:.78rem;color:var(--blue);margin-top:.3rem">Yükleniyor...</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem">Fotoğraf yüklenmezse baş harfler gösterilir.</p>
       </div>
       <div class="form-full">
         <label class="label">Yorum Metni</label>
@@ -534,9 +547,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
         <input class="input" id="b-name" placeholder="Marka adı">
       </div>
       <div class="form-full">
-        <label class="label">Logo URL (opsiyonel)</label>
-        <input class="input" id="b-logoUrl" placeholder="https://...logo.png">
-        <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem;">Logo URL girilmezse marka adı metin olarak gösterilir.</p>
+        <label class="label">Logo (opsiyonel)</label>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <input class="input" id="b-logoUrl" placeholder="Yüklenen logo URL'si" style="flex:1">
+          <label style="cursor:pointer;flex-shrink:0">
+            <span class="btn btn-ghost btn-sm">📁 Logo Seç</span>
+            <input type="file" accept="image/*" style="display:none" onchange="handleUpload('b-logo',this)">
+          </label>
+        </div>
+        <div id="b-logo-preview" style="margin-top:.5rem"></div>
+        <div id="b-logo-progress" style="display:none;font-size:.78rem;color:var(--blue);margin-top:.3rem">Yükleniyor...</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem">Logo yüklenmezse marka adı metin olarak gösterilir.</p>
       </div>
       <label class="toggle">
         <input type="checkbox" id="b-active" checked>
@@ -793,6 +814,8 @@ function openTestiModal(t) {
   document.getElementById('t-name').value = t?.name || '';
   document.getElementById('t-role').value = t?.role || '';
   document.getElementById('t-initials').value = t?.initials || '';
+  document.getElementById('t-avatarUrl').value = t?.avatarUrl || '';
+  document.getElementById('t-avatar-preview').innerHTML = t?.avatarUrl ? previewHtml(t.avatarUrl) : '';
   document.getElementById('t-quote').value = t?.quote || '';
   document.getElementById('t-active').checked = t ? t.active : true;
   document.getElementById('testiModal').classList.add('open');
@@ -809,6 +832,7 @@ async function saveTesti() {
     name: document.getElementById('t-name').value,
     role: document.getElementById('t-role').value,
     initials: document.getElementById('t-initials').value,
+    avatarUrl: document.getElementById('t-avatarUrl').value,
     quote: document.getElementById('t-quote').value,
     active: document.getElementById('t-active').checked
   };
@@ -861,6 +885,7 @@ function openBrandModal(b) {
   document.getElementById('brandModalTitle').textContent = b ? 'Marka Düzenle' : 'Yeni Marka';
   document.getElementById('b-name').value = b?.name || '';
   document.getElementById('b-logoUrl').value = b?.logoUrl || '';
+  document.getElementById('b-logo-preview').innerHTML = b?.logoUrl ? `<img src="${b.logoUrl}" style="max-height:48px;border-radius:4px;margin-top:.3rem;object-fit:contain">` : '';
   document.getElementById('b-active').checked = b ? b.active : true;
   document.getElementById('brandModal').classList.add('open');
 }
@@ -1086,17 +1111,22 @@ function previewHtml(url) {
 async function handleUpload(id, input) {
   const file = input.files[0];
   if (!file) return;
+  // Map widget id to actual url input id
+  const urlInputId = id === 't-avatar' ? 't-avatarUrl'
+                   : id === 'b-logo'   ? 'b-logoUrl'
+                   : id + '-url';
   const prog = document.getElementById(id + '-progress');
-  prog.style.display = 'block';
-  prog.textContent = 'Yükleniyor...';
+  const preview = document.getElementById(id + '-preview');
+  if (prog) { prog.style.display = 'block'; prog.textContent = 'Yükleniyor...'; }
   try {
     const url = await uploadFile(file);
-    document.getElementById(id + '-url').value = url;
-    document.getElementById(id + '-preview').innerHTML = previewHtml(url);
-    prog.style.display = 'none';
+    const urlInput = document.getElementById(urlInputId);
+    if (urlInput) urlInput.value = url;
+    if (preview) preview.innerHTML = previewHtml(url);
+    if (prog) prog.style.display = 'none';
     toast('Dosya yüklendi', 'success');
   } catch {
-    prog.textContent = 'Hata oluştu';
+    if (prog) prog.textContent = 'Hata oluştu';
     toast('Yükleme hatası', 'error');
   }
 }
