@@ -309,51 +309,9 @@ h1 em { font-style: italic; color: var(--pink); }
 <!-- HANGI AN İÇİN -->
 <section id="icin" class="section section-white">
   <span class="sec-tag">Hangi An İçin</span>
-  <h2>Her özel gün için geçerli</h2>
-  <p class="sec-desc">Sebebi ne olursa olsun, özel hissettirmek istediğiniz her an için hazırlarız.</p>
-
-  <div class="occasions-grid reveal">
-    <div class="ocard">
-      <span class="ocard-icon">💍</span>
-      <h3>Evlilik Teklifi</h3>
-      <p>O anı çok daha büyük yapın.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">💑</span>
-      <h3>Yıldönümü</h3>
-      <p>Yılların özeti, tek bir videoda.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">🎂</span>
-      <h3>Doğum Günü</h3>
-      <p>Alışılmışın dışında bir sürpriz.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">🌷</span>
-      <h3>Anneler Günü</h3>
-      <p>Annenize layık bir sürpriz.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">🎓</span>
-      <h3>Mezuniyet</h3>
-      <p>O anı ölümsüzleştirin.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">✈️</span>
-      <h3>Veda</span>
-      <p>Uzakta olanlara özel bir hatıra.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">💌</span>
-      <h3>Sürpriz</h3>
-      <p>Gerekçesi olmak zorunda değil.</p>
-    </div>
-    <div class="ocard">
-      <span class="ocard-icon">🎁</span>
-      <h3>Diğer</h3>
-      <p>Aklınızdaki her özel an için.</p>
-    </div>
-  </div>
+  <h2 id="icin-title">Her özel gün için geçerli</h2>
+  <p class="sec-desc" id="icin-desc">Sebebi ne olursa olsun, özel hissettirmek istediğiniz her an için hazırlarız.</p>
+  <div class="occasions-grid reveal" id="occasions-grid"></div>
 </section>
 
 <!-- ÖRNEK VİDEO -->
@@ -416,105 +374,26 @@ h1 em { font-style: italic; color: var(--pink); }
 </section>
 
 <!-- LOGOS -->
-<div class="logos-section-pink" style="border-top:1px solid rgba(200,68,121,0.1);border-bottom:1px solid rgba(200,68,121,0.1);">
+<div class="logos-section-pink" id="hediye-brands-section" style="display:none;border-top:1px solid rgba(200,68,121,0.1);border-bottom:1px solid rgba(200,68,121,0.1);">
   <p class="logos-label" style="text-align:center;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(200,68,121,0.45);margin-bottom:1.5rem;font-weight:600;">Hediye Video Gönderilen Markalar ve Kişiler</p>
   <div class="logos-track-wrap">
-    <div class="logos-track">
-      <div class="logo-pill"><span>Marka 1</span></div><div class="logo-pill"><span>Marka 2</span></div><div class="logo-pill"><span>Marka 3</span></div><div class="logo-pill"><span>Marka 4</span></div><div class="logo-pill"><span>Marka 5</span></div><div class="logo-pill"><span>Marka 6</span></div><div class="logo-pill"><span>Marka 7</span></div><div class="logo-pill"><span>Marka 8</span></div><div class="logo-pill"><span>Marka 9</span></div><div class="logo-pill"><span>Marka 10</span></div><div class="logo-pill"><span>Marka 1</span></div><div class="logo-pill"><span>Marka 2</span></div><div class="logo-pill"><span>Marka 3</span></div><div class="logo-pill"><span>Marka 4</span></div><div class="logo-pill"><span>Marka 5</span></div><div class="logo-pill"><span>Marka 6</span></div><div class="logo-pill"><span>Marka 7</span></div><div class="logo-pill"><span>Marka 8</span></div><div class="logo-pill"><span>Marka 9</span></div><div class="logo-pill"><span>Marka 10</span></div>
-    </div>
+    <div class="logos-track" id="hediye-brands-track"></div>
   </div>
 </div>
 
 <!-- SÜREÇ -->
 <section id="nasil" class="section">
   <span class="sec-tag">Süreç</span>
-  <h2>Nasıl çalışır?</h2>
-  <p class="sec-desc">Formdan sipariş verin, gerisini biz halledelim.</p>
-
-  <div class="steps-grid reveal">
-    <div class="step">
-      <div class="step-num">01</div>
-      <h4>Formu Doldurun</h4>
-      <p>Özel gün, kişisel detaylar ve videonun tonu hakkında bilgi verin.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <h4>Konsept Onayı</h4>
-      <p>Sahne planı ve stilini 24 saat içinde paylaşıyoruz, fotoğrafları istiyoruz.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <h4>Prodüksiyon</h4>
-      <p>3 ila 5 iş günü içinde videonuz hazır olur.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <h4>Teslimat</h4>
-      <p>Paylaşmaya hazır formatta teslim ediyoruz. Bir revizyon hakkı dahil.</p>
-    </div>
-  </div>
+  <h2 id="nasil-title">Nasıl çalışır?</h2>
+  <p class="sec-desc" id="nasil-desc">Formdan sipariş verin, gerisini biz halledelim.</p>
+  <div class="steps-grid reveal" id="steps-grid"></div>
 </section>
 
 <!-- REFERANSLAR -->
 <section id="referanslar" class="section section-white">
   <span class="sec-tag">Yorumlar</span>
-  <h2>Sipariş verenler ne dedi?</h2>
-
-  <div class="tgrid reveal">
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo-pink">Yıldönümü</span>
-        <span class="stars-pink">★★★★★</span>
-      </div>
-      <p class="tquote-serif">Sevgililer günü sürprizi için hazırlattım. Eşim videoya bakıp ağladı. Beklenenden çok daha kişisel çıktı.</p>
-      <div class="tauthor"><div class="avatar">BE</div><div><strong>Barış E.</strong><span>Yıldönümü Siparişi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo-pink">Anneler Günü</span>
-        <span class="stars-pink">★★★★★</span>
-      </div>
-      <p class="tquote-serif">Annem için hazırlattım, Anneler Günü sürprizi olarak. Hiç beklemediği bir şeydi, çok duygulandı.</p>
-      <div class="tauthor"><div class="avatar">ZK</div><div><strong>Zeynep K.</strong><span>Anneler Günü Siparişi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo-pink">Teklif</span>
-        <span class="stars-pink">★★★★★</span>
-      </div>
-      <p class="tquote-serif">Teklif anım için sipariş verdim. Süreç çok rahat ilerledi, tam istediğim gibi çıktı.</p>
-      <div class="tauthor"><div class="avatar">KA</div><div><strong>Kerem A.</strong><span>Evlilik Teklifi Siparişi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo-pink">Doğum Günü</span>
-        <span class="stars-pink">★★★★★</span>
-      </div>
-      <p class="tquote-serif">Annemin 60. doğum günü için hazırlattım. Tüm aile çok duygulandı, harika bir fikir oldu.</p>
-      <div class="tauthor"><div class="avatar">LA</div><div><strong>Leyla A.</strong><span>Doğum Günü Siparişi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo-pink">Sürpriz</span>
-        <span class="stars-pink">★★★★★</span>
-      </div>
-      <p class="tquote-serif">Sebebi olmadan sipariş verdim. Arkadaşım hayatında böyle bir hediye almamıştı, gerçekten çok etkilendi.</p>
-      <div class="tauthor"><div class="avatar">MT</div><div><strong>Mert T.</strong><span>Sürpriz Siparişi</span></div></div>
-    </div>
-
-    <div class="tcard">
-      <div class="tcard-top">
-        <span class="tcard-logo-pink">Mezuniyet</span>
-        <span class="stars-pink">★★★★★</span>
-      </div>
-      <p class="tquote-serif">Kızımın mezuniyeti için sipariş verdim. Sahne planı gelince şaşırdım, düşündüğümden çok daha güzeldi.</p>
-      <div class="tauthor"><div class="avatar">SB</div><div><strong>Sevim B.</strong><span>Mezuniyet Siparişi</span></div></div>
-    </div>
-  </div>
+  <h2 id="ref-title">Sipariş verenler ne dedi?</h2>
+  <div class="tgrid reveal" id="hediye-tgrid"></div>
 </section>
 
 <!-- SİPARİŞ FORMU -->
@@ -608,7 +487,6 @@ async function loadHediyeContent() {
     if (!res.ok) return;
     const d = await res.json();
     const h = d.hediye;
-    if (!h) return;
 
     // Settings
     if (d.settings) {
@@ -616,6 +494,8 @@ async function loadHediyeContent() {
       if (d.settings.faviconUrl) { const fav = document.querySelector('link[rel="icon"]'); if (fav) fav.href = d.settings.faviconUrl; }
       if (d.settings.copyright) document.querySelectorAll('.footer-copyright').forEach(el => el.textContent = d.settings.copyright);
     }
+
+    if (!h) return;
 
     // Hero
     if (h.hero) {
@@ -631,16 +511,14 @@ async function loadHediyeContent() {
       if (cardtag && h.hero.heroCardTag) cardtag.textContent = h.hero.heroCardTag;
       if (h.hero.heroVideoUrl) {
         const cardVid = document.querySelector('.hero-card-video');
-        if (cardVid) {
-          cardVid.innerHTML = `<video src="${h.hero.heroVideoUrl}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:12px 12px 0 0"></video>`;
-        }
+        if (cardVid) cardVid.innerHTML = `<video src="${h.hero.heroVideoUrl}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;border-radius:12px 12px 0 0"></video>`;
       }
     }
 
     // Occasions
-    if (h.occasions?.length) {
-      const grid = document.querySelector('.occasions-grid');
-      if (grid) grid.innerHTML = h.occasions.map(o => `
+    const occGrid = document.getElementById('occasions-grid');
+    if (occGrid && h.occasions?.length) {
+      occGrid.innerHTML = h.occasions.map(o => `
         <div class="ocard">
           <span class="ocard-icon">${o.icon||'🎁'}</span>
           <h3>${o.title||''}</h3>
@@ -660,12 +538,12 @@ async function loadHediyeContent() {
         if (h.exampleVideo.videoUrl) {
           const placeholder = sec.querySelector('.video-placeholder');
           if (placeholder) {
-            const container = placeholder.parentElement;
             placeholder.style.display = 'none';
             const v = document.createElement('video');
             v.src = h.exampleVideo.videoUrl;
-            v.controls = true; v.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:16px';
-            container.appendChild(v);
+            v.controls = true;
+            v.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:16px';
+            placeholder.parentElement.appendChild(v);
           }
         }
       }
@@ -681,8 +559,7 @@ async function loadHediyeContent() {
               ? (s.url.match(/\.(mp4|webm)/i)
                 ? `<video src="${s.url}" muted loop autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>`
                 : `<img src="${s.url}" style="width:100%;height:100%;object-fit:cover">`)
-              : `<span class="slide-icon">🎞️</span>`
-            }
+              : `<span class="slide-icon">🎞️</span>`}
             <span class="slide-label">${s.caption||''}</span>
           </div>
         `).join('');
@@ -691,30 +568,27 @@ async function loadHediyeContent() {
     }
 
     // Process
+    const stepsGrid = document.getElementById('steps-grid');
     if (h.process) {
-      const sec = document.getElementById('nasil');
-      if (sec) {
-        const h2 = sec.querySelector('h2');
-        if (h2 && h.process.title) h2.textContent = h.process.title;
-        const desc = sec.querySelector('.sec-desc');
-        if (desc && h.process.desc) desc.textContent = h.process.desc;
-        if (h.process.steps?.length) {
-          const grid = sec.querySelector('.steps-grid');
-          if (grid) grid.innerHTML = h.process.steps.map(s => `
-            <div class="step">
-              <div class="step-num">${s.num||''}</div>
-              <h4>${s.title||''}</h4>
-              <p>${s.desc||''}</p>
-            </div>
-          `).join('');
-        }
+      const t = document.getElementById('nasil-title');
+      if (t && h.process.title) t.textContent = h.process.title;
+      const desc = document.getElementById('nasil-desc');
+      if (desc && h.process.desc) desc.textContent = h.process.desc;
+      if (stepsGrid && h.process.steps?.length) {
+        stepsGrid.innerHTML = h.process.steps.map(s => `
+          <div class="step">
+            <div class="step-num">${s.num||''}</div>
+            <h4>${s.title||''}</h4>
+            <p>${s.desc||''}</p>
+          </div>
+        `).join('');
       }
     }
 
     // Testimonials
-    if (h.testimonials?.length) {
-      const grid = document.querySelector('#referanslar .tgrid');
-      if (grid) grid.innerHTML = h.testimonials.map(t => `
+    const tgrid = document.getElementById('hediye-tgrid');
+    if (tgrid && h.testimonials?.length) {
+      tgrid.innerHTML = h.testimonials.map(t => `
         <div class="tcard">
           <div class="tcard-top">
             <span class="tcard-logo-pink">${t.company||''}</span>
@@ -731,15 +605,15 @@ async function loadHediyeContent() {
       `).join('');
     }
 
-    // Brands marquee
-    if (h.brands?.length) {
-      const track = document.querySelector('.logos-section-pink .logos-track');
-      if (track) {
-        const double = [...h.brands, ...h.brands];
-        track.innerHTML = double.map(b =>
-          `<div class="logo-pill">${b.logoUrl ? `<img src="${b.logoUrl}" alt="${b.name}" style="height:22px;width:auto;opacity:.6">` : `<span>${b.name}</span>`}</div>`
-        ).join('');
-      }
+    // Brands - show section only if there are brands
+    const brandsSection = document.getElementById('hediye-brands-section');
+    const brandsTrack = document.getElementById('hediye-brands-track');
+    if (brandsSection && brandsTrack && h.brands?.length) {
+      brandsSection.style.display = '';
+      const double = [...h.brands, ...h.brands];
+      brandsTrack.innerHTML = double.map(b =>
+        `<div class="logo-pill">${b.logoUrl ? `<img src="${b.logoUrl}" alt="${b.name}" style="height:22px;width:auto;opacity:.6">` : `<span>${b.name}</span>`}</div>`
+      ).join('');
     }
 
     // Form texts

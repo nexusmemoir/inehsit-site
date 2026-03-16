@@ -37,6 +37,7 @@ if (!fs.existsSync(DATA_FILE)) {
       process: { title: 'Nasıl çalışır?', desc: 'Formdan sipariş verin, gerisini biz halledelim.', steps: [{ num: '01', title: 'Formu Doldurun', desc: 'Özel gün ve detayları bildirin.' }, { num: '02', title: 'Konsept Onayı', desc: '24 saat içinde sahne planı paylaşıyoruz.' }, { num: '03', title: 'Prodüksiyon', desc: '3 ila 5 iş günü içinde hazır.' }, { num: '04', title: 'Teslimat', desc: 'Paylaşmaya hazır formatta teslim.' }] },
       testimonials: [],
       brands: [],
+      process: { title: 'Nasıl çalışır?', desc: 'Formdan sipariş verin, gerisini biz halledelim.', steps: [{ num: '01', title: 'Formu Doldurun', desc: 'Özel gün ve detayları bildirin.' }, { num: '02', title: 'Konsept Onayı', desc: '24 saat içinde sahne planı paylaşıyoruz.' }, { num: '03', title: 'Prodüksiyon', desc: '3 ila 5 iş günü içinde hazır.' }, { num: '04', title: 'Teslimat', desc: 'Paylaşmaya hazır formatta teslim.' }] },
       form: { title: 'Siparişinizi oluşturun', desc: 'Detayları paylaşın, sizi arayıp konuşalım.', note: 'Fotoğraflarınızı sipariş onayı sonrası WhatsApp üzerinden iletebilirsiniz.' }
     },
     submissions: []
