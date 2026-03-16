@@ -48,19 +48,7 @@ h1 {
 .type-wrap {
   display: block;
   color: var(--blue);
-  min-height: 1.2em;
 }
-
-.type-cursor {
-  display: inline-block;
-  width: 3px; height: 1em;
-  background: var(--blue);
-  margin-left: 2px;
-  vertical-align: text-bottom;
-  animation: cursor-blink .7s infinite;
-}
-
-@keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 .hero-desc {
   font-size: 1rem; color: var(--ink2);
@@ -344,7 +332,7 @@ h1 {
   <div class="hero-left reveal">
     <div class="hero-badge"><span class="badge-dot"></span>Yapay Zeka Destekli Video</div>
     <h1>
-      <span id="type-line" class="type-wrap"></span><span class="type-cursor"></span><br>
+      <span id="type-line" class="type-wrap">Ürününüzü gerçekten</span><br>
       izleten reklamlar
     </h1>
     <p class="hero-desc">
@@ -587,38 +575,6 @@ h1 {
 <script>
 // Typewriter effect
 // ── Dynamic content from API ──────────────────────────────
-let phrases = ["Ürününüzü gerçekten","Markanızı öne çıkaran","Müşterinizi harekete geçiren","Satışlarınızı artıran"];
-let pi = 0, ci = 0, deleting = false, typing = false;
-const typeEl = document.getElementById("type-line");
-
-function type() {
-  typing = true;
-  const phrase = phrases[pi];
-  if (!phrase) { typing = false; return; }
-  if (!deleting) {
-    ci++;
-    typeEl.textContent = phrase.slice(0, ci);
-    if (ci >= phrase.length) {
-      deleting = true;
-      setTimeout(type, 2200);
-      return;
-    }
-  } else {
-    ci--;
-    typeEl.textContent = phrase.slice(0, ci);
-    if (ci <= 0) {
-      deleting = false;
-      ci = 0;
-      pi = (pi + 1) % phrases.length;
-    }
-  }
-  setTimeout(type, deleting ? 35 : 75);
-}
-
-function startTypewriter() {
-  if (!typing) type();
-}
-
 async function loadContent() {
   try {
     const res = await fetch('/api/content');
@@ -628,9 +584,8 @@ async function loadContent() {
     // Hero
     if (d.hero) {
       if (d.hero.typewriterPhrases?.length) {
-        phrases = d.hero.typewriterPhrases;
-        pi = 0; ci = 0; deleting = false; typing = false;
-        startTypewriter();
+        const el = document.getElementById('type-line');
+        if (el) el.textContent = d.hero.typewriterPhrases[0];
       }
       if (d.hero.title2) {
         const t2 = document.querySelector('#hero h1');
@@ -723,7 +678,6 @@ async function loadContent() {
   } catch(e) { console.error('Content load error:', e); }
 }
 
-startTypewriter();
 loadContent();
 
 // Form — submit to local API
