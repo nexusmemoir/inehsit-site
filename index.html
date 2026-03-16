@@ -292,14 +292,34 @@ h1 {
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
 @media(max-width:960px){
-  #hero { grid-template-columns: 1fr; }
-  .hero-right { display: none; }
-  .service-section { grid-template-columns: 1fr; gap: 2rem; }
+  #hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: 80px;
+  }
+  .hero-left { padding: 2.5rem 5% 2rem; }
+  .hero-right {
+    display: block !important;
+    min-height: 260px;
+    height: 260px;
+  }
+  .service-section { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 5%; }
   .service-section.reverse { direction: ltr; }
+  .service-visual { aspect-ratio: 16/9; }
   .form-container { grid-template-columns: 1fr; gap: 2.5rem; }
   .form-grid-2 { grid-template-columns: 1fr; }
   nav ul { display: none; }
-  .stats-bar { gap: 2rem; }
+  .stats-bar { gap: 1.5rem; padding: 1.5rem 5%; }
+  .stat-num { font-size: 1.5rem; }
+  h1 { font-size: clamp(2rem, 7vw, 2.8rem); }
+  .hero-desc { font-size: .95rem; }
+  .section-card { margin-bottom: 1rem; }
+}
+
+@media(max-width:600px){
+  .stats-bar { grid-template-columns: 1fr 1fr; display: grid; gap: 1rem; }
+  .tgrid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -568,19 +588,35 @@ h1 {
 // Typewriter effect
 // ── Dynamic content from API ──────────────────────────────
 let phrases = ["Ürününüzü gerçekten","Markanızı öne çıkaran","Müşterinizi harekete geçiren","Satışlarınızı artıran"];
-let pi = 0, ci = 0, deleting = false;
+let pi = 0, ci = 0, deleting = false, typing = false;
 const typeEl = document.getElementById("type-line");
 
 function type() {
+  typing = true;
   const phrase = phrases[pi];
+  if (!phrase) { typing = false; return; }
   if (!deleting) {
-    typeEl.textContent = phrase.slice(0, ++ci);
-    if (ci === phrase.length) { deleting = true; setTimeout(type, 2000); return; }
+    ci++;
+    typeEl.textContent = phrase.slice(0, ci);
+    if (ci >= phrase.length) {
+      deleting = true;
+      setTimeout(type, 2200);
+      return;
+    }
   } else {
-    typeEl.textContent = phrase.slice(0, --ci);
-    if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
+    ci--;
+    typeEl.textContent = phrase.slice(0, ci);
+    if (ci <= 0) {
+      deleting = false;
+      ci = 0;
+      pi = (pi + 1) % phrases.length;
+    }
   }
-  setTimeout(type, deleting ? 40 : 80);
+  setTimeout(type, deleting ? 35 : 75);
+}
+
+function startTypewriter() {
+  if (!typing) type();
 }
 
 async function loadContent() {
@@ -591,7 +627,11 @@ async function loadContent() {
 
     // Hero
     if (d.hero) {
-      if (d.hero.typewriterPhrases?.length) phrases = d.hero.typewriterPhrases;
+      if (d.hero.typewriterPhrases?.length) {
+        phrases = d.hero.typewriterPhrases;
+        pi = 0; ci = 0; deleting = false; typing = false;
+        startTypewriter();
+      }
       if (d.hero.title2) {
         const t2 = document.querySelector('#hero h1');
         if (t2) {
@@ -683,8 +723,8 @@ async function loadContent() {
   } catch(e) { console.error('Content load error:', e); }
 }
 
-type(); // start immediately with default phrases
-loadContent(); // update phrases and content from API async
+startTypewriter();
+loadContent();
 
 // Form — submit to local API
 document.getElementById("contactForm").addEventListener("submit", async function(e) {
