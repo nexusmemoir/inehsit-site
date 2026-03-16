@@ -76,7 +76,13 @@ app.get('/api/content', (req, res) => {
     services: data.services,
     testimonials: (data.testimonials || []).filter(t => t.active),
     brands: (data.brands || []).filter(b => b.active),
-    settings: { siteTitle: data.settings.siteTitle, email: data.settings.email }
+    settings: {
+      siteTitle: data.settings.siteTitle,
+      email: data.settings.email,
+      copyright: data.settings.copyright,
+      logoUrl: data.settings.logoUrl,
+      faviconUrl: data.settings.faviconUrl
+    }
   });
 });
 
