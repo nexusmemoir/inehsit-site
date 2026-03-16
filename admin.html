@@ -505,7 +505,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
           <div class="tab" onclick="hediyeTab('video',this)">Video & Slider</div>
           <div class="tab" onclick="hediyeTab('process',this)">Süreç</div>
           <div class="tab" onclick="hediyeTab('testimonials',this)">Yorumlar</div>
-          <div class="tab" onclick="hediyeTab('brands',this)">Markalar</div>
           <div class="tab" onclick="hediyeTab('form',this)">Form</div>
         </div>
         <div id="ht-hero"></div>
@@ -513,7 +512,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
         <div id="ht-video" style="display:none"></div>
         <div id="ht-process" style="display:none"></div>
         <div id="ht-testimonials" style="display:none"></div>
-        <div id="ht-brands" style="display:none"></div>
         <div id="ht-form" style="display:none"></div>
       </div>
 
@@ -1340,41 +1338,62 @@ let editingHBrandId = null;
 let editingHSlideId = null;
 
 async function loadHediyePage() {
-  hediyeData = await api('GET', '/api/admin/hediye');
-  renderHediyeHero();
+  try {
+    hediyeData = await api('GET', '/api/admin/hediye');
+  } catch(e) {
+    hediyeData = {};
+  }
+  // render active tab
+  const activeTab = document.querySelector('#hediyeTabs .tab.active');
+  if (activeTab) {
+    const tabName = activeTab.textContent.trim();
+    const map = { 'Hero':'hero','Özel Günler':'occasions','Video & Slider':'video','Süreç':'process','Yorumlar':'testimonials','Form':'form' };
+    const tab = map[tabName] || 'hero';
+    hediyeTab_render(tab);
+  } else {
+    hediyeTab_render('hero');
+  }
 }
 
 function hediyeTab(tab, el) {
   document.querySelectorAll('#hediyeTabs .tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  ['hero','occasions','video','process','testimonials','brands','form'].forEach(t => {
-    document.getElementById('ht-' + t).style.display = t === tab ? '' : 'none';
+  ['hero','occasions','video','process','testimonials','form'].forEach(t => {
+    const el2 = document.getElementById('ht-' + t);
+    if (el2) el2.style.display = t === tab ? '' : 'none';
   });
-  if (tab === 'hero') renderHediyeHero();
-  if (tab === 'occasions') renderHediyeOccasions();
-  if (tab === 'video') renderHediyeVideo();
-  if (tab === 'process') renderHediyeProcess();
-  if (tab === 'testimonials') renderHediyeTestimonials();
-  if (tab === 'brands') renderHediyeBrands();
-  if (tab === 'form') renderHediyeForm();
+  hediyeTab_render(tab);
 }
 
+function hediyeTab_render(tab) {
+  if (tab === 'hero') renderHediyeHero();
+  else if (tab === 'occasions') renderHediyeOccasions();
+  else if (tab === 'video') renderHediyeVideo();
+  else if (tab === 'process') renderHediyeProcess();
+  else if (tab === 'testimonials') renderHediyeTestimonials();
+  else if (tab === 'form') renderHediyeForm();
+}
+
+// ── HERO ──────────────────────────────────────────────────
 function renderHediyeHero() {
   const h = hediyeData.hero || {};
   document.getElementById('ht-hero').innerHTML = `
     <div class="section-card">
       <div class="section-head"><div><h3>Hero Bölümü</h3><p>Banner metinleri ve görsel</p></div></div>
       <div class="section-body">
-        <div class="form-full"><label class="label">Üst Etiket</label><input class="input" id="hh-eyebrow" value="${h.eyebrow||''}"></div>
-        <div class="form-full"><label class="label">Başlık (em etiketi italic yapar)</label><input class="input" id="hh-title" value="${(h.title||'').replace(/<[^>]+>/g, '')}"></div>
-        <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="hh-desc">${h.description||''}</textarea></div>
+        <div class="form-full"><label class="label">Üst Etiket</label>
+          <input class="input" id="hh-eyebrow" value="${esc(h.eyebrow)}"></div>
+        <div class="form-full"><label class="label">Başlık</label>
+          <input class="input" id="hh-title" value="${esc((h.title||'').replace(/<[^>]+>/g,''))}"></div>
+        <div class="form-full"><label class="label">Açıklama</label>
+          <textarea class="textarea" id="hh-desc">${esc(h.description)}</textarea></div>
         <div class="form-row">
-          <div><label class="label">CTA Buton 1</label><input class="input" id="hh-cta1" value="${h.ctaPrimary||''}"></div>
-          <div><label class="label">CTA Buton 2</label><input class="input" id="hh-cta2" value="${h.ctaSecondary||''}"></div>
+          <div><label class="label">Buton 1</label><input class="input" id="hh-cta1" value="${esc(h.ctaPrimary)}"></div>
+          <div><label class="label">Buton 2</label><input class="input" id="hh-cta2" value="${esc(h.ctaSecondary)}"></div>
         </div>
         <div class="form-row">
-          <div><label class="label">Kart Alt Yazı</label><input class="input" id="hh-caption" value="${h.heroCardCaption||''}"></div>
-          <div><label class="label">Kart Etiketi</label><input class="input" id="hh-cardtag" value="${h.heroCardTag||''}"></div>
+          <div><label class="label">Kart Alt Yazı</label><input class="input" id="hh-caption" value="${esc(h.heroCardCaption)}"></div>
+          <div><label class="label">Kart Etiketi</label><input class="input" id="hh-cardtag" value="${esc(h.heroCardTag)}"></div>
         </div>
         ${fileUploadWidget('hh-video', h.heroVideoUrl||'', 'video/mp4,video/webm', 'Hero Video (opsiyonel)')}
         <button class="btn btn-primary" onclick="saveHediyeHero()">Kaydet</button>
@@ -1385,42 +1404,48 @@ function renderHediyeHero() {
 
 async function saveHediyeHero() {
   await api('PUT', '/api/admin/hediye', { hero: {
-    eyebrow: document.getElementById('hh-eyebrow').value,
-    title: document.getElementById('hh-title').value,
-    description: document.getElementById('hh-desc').value,
-    ctaPrimary: document.getElementById('hh-cta1').value,
-    ctaSecondary: document.getElementById('hh-cta2').value,
-    heroCardCaption: document.getElementById('hh-caption').value,
-    heroCardTag: document.getElementById('hh-cardtag').value,
-    heroVideoUrl: document.getElementById('hh-video-url').value
+    eyebrow: val('hh-eyebrow'),
+    title: val('hh-title'),
+    description: val('hh-desc'),
+    ctaPrimary: val('hh-cta1'),
+    ctaSecondary: val('hh-cta2'),
+    heroCardCaption: val('hh-caption'),
+    heroCardTag: val('hh-cardtag'),
+    heroVideoUrl: val('hh-video-url')
   }});
   hediyeData = await api('GET', '/api/admin/hediye');
   toast('Hero kaydedildi', 'success');
 }
 
+// ── ÖZEL GÜNLER ───────────────────────────────────────────
 function renderHediyeOccasions() {
   const occ = hediyeData.occasions || [];
   document.getElementById('ht-occasions').innerHTML = `
     <div class="section-card">
-      <div class="section-head"><div><h3>Özel Günler</h3><p>Hangi An İçin kartları</p></div></div>
+      <div class="section-head"><div><h3>Özel Günler</h3><p>Hangi An İçin kartları — her satır bir kart</p></div></div>
       <div class="section-body">
-        <p style="font-size:.8rem;color:var(--muted);margin-bottom:1.25rem">Her satır bir kart. İkon, başlık ve açıklama.</p>
-        <div id="occ-list">
-          ${occ.map((o,i) => `
-            <div style="display:grid;grid-template-columns:60px 1fr 2fr auto;gap:.5rem;margin-bottom:.5rem;align-items:center">
-              <input class="input" value="${o.icon||''}" placeholder="İkon" id="occ-icon-${i}">
-              <input class="input" value="${o.title||''}" placeholder="Başlık" id="occ-title-${i}">
-              <input class="input" value="${o.desc||''}" placeholder="Açıklama" id="occ-desc-${i}">
-              <button class="btn-icon del" onclick="removeOcc(${i})">✕</button>
-            </div>
-          `).join('')}
+        <div style="display:grid;grid-template-columns:52px 1fr 2fr 32px;gap:.5rem;margin-bottom:.5rem">
+          <span class="label">İkon</span><span class="label">Başlık</span><span class="label">Açıklama</span><span></span>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="addOcc()" style="margin-top:.5rem">+ Satır Ekle</button>
-        <br><br>
-        <button class="btn btn-primary" onclick="saveOccasions()">Kaydet</button>
+        <div id="occ-list">
+          ${occ.length ? occ.map((o,i) => occRow(o,i)).join('') : '<p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem">Henüz kart yok. Aşağıdan ekleyin.</p>'}
+        </div>
+        <div style="display:flex;gap:.75rem;margin-top:.75rem">
+          <button class="btn btn-ghost btn-sm" onclick="addOcc()">+ Satır Ekle</button>
+          <button class="btn btn-primary" onclick="saveOccasions()">Kaydet</button>
+        </div>
       </div>
     </div>
   `;
+}
+
+function occRow(o, i) {
+  return `<div style="display:grid;grid-template-columns:52px 1fr 2fr 32px;gap:.5rem;margin-bottom:.5rem;align-items:center">
+    <input class="input" value="${esc(o.icon)}" placeholder="🎁" id="occ-icon-${i}">
+    <input class="input" value="${esc(o.title)}" placeholder="Başlık" id="occ-title-${i}">
+    <input class="input" value="${esc(o.desc)}" placeholder="Açıklama" id="occ-desc-${i}">
+    <button class="btn-icon del" onclick="removeOcc(${i})" title="Sil">✕</button>
+  </div>`;
 }
 
 function addOcc() {
@@ -1435,59 +1460,53 @@ function removeOcc(i) {
 }
 
 async function saveOccasions() {
-  const count = document.querySelectorAll('[id^="occ-icon-"]').length;
-  const occasions = [];
-  for (let i = 0; i < count; i++) {
-    occasions.push({
-      icon: document.getElementById('occ-icon-'+i)?.value || '',
-      title: document.getElementById('occ-title-'+i)?.value || '',
-      desc: document.getElementById('occ-desc-'+i)?.value || ''
-    });
-  }
+  const items = document.querySelectorAll('[id^="occ-icon-"]');
+  const occasions = Array.from(items).map((_, i) => ({
+    icon: val('occ-icon-'+i),
+    title: val('occ-title-'+i),
+    desc: val('occ-desc-'+i)
+  }));
   await api('PUT', '/api/admin/hediye', { occasions });
   hediyeData.occasions = occasions;
   toast('Özel günler kaydedildi', 'success');
 }
 
+// ── VIDEO & SLIDER ────────────────────────────────────────
 function renderHediyeVideo() {
   const v = hediyeData.exampleVideo || {};
   const slides = hediyeData.sliderImages || [];
   document.getElementById('ht-video').innerHTML = `
-    <div class="section-card" style="margin-bottom:1rem">
-      <div class="section-head"><div><h3>Örnek Video Bölümü</h3></div></div>
+    <div class="section-card" style="margin-bottom:1.25rem">
+      <div class="section-head"><div><h3>Örnek Video Bölümü</h3><p>Koyu arka planlı video section</p></div></div>
       <div class="section-body">
-        <div class="form-full"><label class="label">Başlık</label><input class="input" id="hv-title" value="${v.title||''}"></div>
-        <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="hv-desc">${v.desc||''}</textarea></div>
-        ${fileUploadWidget('hv-video', v.videoUrl||'', 'video/mp4,video/webm', 'Örnek Video')}
+        <div class="form-row">
+          <div><label class="label">Başlık</label><input class="input" id="hv-title" value="${esc(v.title)}"></div>
+          <div><label class="label">Açıklama</label><input class="input" id="hv-desc" value="${esc(v.desc)}"></div>
+        </div>
+        ${fileUploadWidget('hv-video', v.videoUrl||'', 'video/mp4,video/webm', 'Video Dosyası')}
         <button class="btn btn-primary" onclick="saveHediyeVideo()">Kaydet</button>
       </div>
     </div>
-
     <div class="section-card">
       <div class="section-head">
-        <div><h3>Görsel Slider</h3><p>Kaydırmalı örnek görseller</p></div>
+        <div><h3>Görsel Slider</h3><p>Kaydırmalı örnek görseller / kareler</p></div>
         <button class="btn btn-primary btn-sm" onclick="openHSlideModal()">+ Görsel Ekle</button>
       </div>
       <div class="section-body" style="padding:0">
         <table class="data-table">
-          <thead><tr><th>Görsel</th><th>Açıklama</th><th>Durum</th><th>İşlem</th></tr></thead>
+          <thead><tr><th>Önizleme</th><th>Açıklama</th><th>Aktif</th><th>İşlem</th></tr></thead>
           <tbody>
-            ${slides.map(s => `
+            ${slides.length ? slides.map(s => `
               <tr>
-                <td>${s.url ? `<img src="${s.url}" style="height:40px;border-radius:4px;object-fit:cover">` : '—'}</td>
-                <td>${s.caption||'—'}</td>
-                <td>
-                  <label class="toggle">
-                    <input type="checkbox" ${s.active?'checked':''} onchange="toggleHSlide('${s.id}',this.checked)">
-                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
-                  </label>
-                </td>
-                <td>
-                  <button class="btn-icon" onclick="editHSlide(${s.id})">✎</button>
-                  <button class="btn-icon del" onclick="deleteHSlide(${s.id})">✕</button>
+                <td>${s.url ? `<img src="${s.url}" style="height:44px;width:44px;border-radius:6px;object-fit:cover">` : '<span style="color:var(--muted);font-size:.85rem">Görsel yok</span>'}</td>
+                <td>${esc(s.caption)||'—'}</td>
+                <td><label class="toggle"><input type="checkbox" ${s.active?'checked':''} onchange="toggleHSlide('${s.id}',this.checked)"><div class="toggle-track"><div class="toggle-thumb"></div></div></label></td>
+                <td style="display:flex;gap:.35rem">
+                  <button class="btn-icon" onclick="editHSlide(${s.id})" title="Düzenle">✎</button>
+                  <button class="btn-icon del" onclick="deleteHSlide(${s.id})" title="Sil">✕</button>
                 </td>
               </tr>
-            `).join('')}
+            `).join('') : '<tr><td colspan="4"><div class="empty"><span class="empty-icon">🖼</span><p>Henüz görsel yok. Sağ üstten ekleyin.</p></div></td></tr>'}
           </tbody>
         </table>
       </div>
@@ -1497,9 +1516,9 @@ function renderHediyeVideo() {
 
 async function saveHediyeVideo() {
   await api('PUT', '/api/admin/hediye', { exampleVideo: {
-    title: document.getElementById('hv-title').value,
-    desc: document.getElementById('hv-desc').value,
-    videoUrl: document.getElementById('hv-video-url').value
+    title: val('hv-title'),
+    desc: val('hv-desc'),
+    videoUrl: val('hv-video-url')
   }});
   hediyeData = await api('GET', '/api/admin/hediye');
   toast('Video bölümü kaydedildi', 'success');
@@ -1509,7 +1528,7 @@ function openHSlideModal(s) {
   editingHSlideId = s ? s.id : null;
   document.getElementById('hs-caption').value = s?.caption || '';
   document.getElementById('hs-url').value = s?.url || '';
-  document.getElementById('hs-preview').innerHTML = s?.url ? `<img src="${s.url}" style="max-height:80px;border-radius:4px;margin-top:.3rem">` : '';
+  document.getElementById('hs-preview').innerHTML = s?.url ? previewHtml(s.url) : '';
   document.getElementById('hSlideModal').classList.add('open');
 }
 
@@ -1519,7 +1538,7 @@ async function editHSlide(id) {
 }
 
 async function saveHSlide() {
-  const body = { caption: document.getElementById('hs-caption').value, url: document.getElementById('hs-url').value };
+  const body = { caption: val('hs-caption'), url: val('hs-url') };
   if (editingHSlideId) await api('PUT', `/api/admin/hediye/slides/${editingHSlideId}`, body);
   else await api('POST', '/api/admin/hediye/slides', body);
   closeModal('hSlideModal');
@@ -1530,7 +1549,6 @@ async function saveHSlide() {
 
 async function toggleHSlide(id, active) {
   await api('PUT', `/api/admin/hediye/slides/${id}`, { active });
-  toast(active ? 'Aktif edildi' : 'Pasif edildi');
 }
 
 async function deleteHSlide(id) {
@@ -1541,27 +1559,29 @@ async function deleteHSlide(id) {
   toast('Görsel silindi');
 }
 
+// ── SÜREÇ ─────────────────────────────────────────────────
 function renderHediyeProcess() {
   const p = hediyeData.process || {};
   const steps = p.steps || [];
   document.getElementById('ht-process').innerHTML = `
     <div class="section-card">
-      <div class="section-head"><div><h3>Süreç Bölümü</h3></div></div>
+      <div class="section-head"><div><h3>Süreç Bölümü</h3><p>Nasıl çalışır adımları</p></div></div>
       <div class="section-body">
-        <div class="form-row">
-          <div><label class="label">Başlık</label><input class="input" id="hp-title" value="${p.title||''}"></div>
-          <div><label class="label">Açıklama</label><input class="input" id="hp-desc" value="${p.desc||''}"></div>
+        <div class="form-row" style="margin-bottom:1.25rem">
+          <div><label class="label">Başlık</label><input class="input" id="hp-title" value="${esc(p.title)}"></div>
+          <div><label class="label">Açıklama</label><input class="input" id="hp-desc" value="${esc(p.desc)}"></div>
         </div>
-        <p style="font-size:.78rem;font-weight:600;color:var(--ink2);margin-bottom:.75rem">Adımlar</p>
-        ${steps.map((s,i) => `
-          <div style="background:var(--bg);border-radius:8px;padding:1rem;margin-bottom:.75rem">
-            <div class="form-row">
-              <div><label class="label">Numara</label><input class="input" id="hps-num-${i}" value="${s.num||''}"></div>
-              <div><label class="label">Başlık</label><input class="input" id="hps-title-${i}" value="${s.title||''}"></div>
+        <p class="label" style="margin-bottom:.75rem">Adımlar</p>
+        ${steps.length ? steps.map((s,i) => `
+          <div style="background:var(--bg);border-radius:8px;padding:1rem;margin-bottom:.75rem;border:1px solid var(--border)">
+            <div class="form-row" style="margin-bottom:.5rem">
+              <div><label class="label">Numara</label><input class="input" id="hps-num-${i}" value="${esc(s.num)}"></div>
+              <div><label class="label">Başlık</label><input class="input" id="hps-title-${i}" value="${esc(s.title)}"></div>
             </div>
-            <div><label class="label">Açıklama</label><input class="input" id="hps-desc-${i}" value="${s.desc||''}"></div>
+            <label class="label">Açıklama</label>
+            <input class="input" id="hps-desc-${i}" value="${esc(s.desc)}">
           </div>
-        `).join('')}
+        `).join('') : '<p style="color:var(--muted);font-size:.85rem;margin-bottom:.75rem">Adım bulunamadı.</p>'}
         <button class="btn btn-primary" onclick="saveHediyeProcess(${steps.length})">Kaydet</button>
       </div>
     </div>
@@ -1571,23 +1591,17 @@ function renderHediyeProcess() {
 async function saveHediyeProcess(count) {
   const steps = [];
   for (let i = 0; i < count; i++) {
-    steps.push({
-      num: document.getElementById(`hps-num-${i}`)?.value || '',
-      title: document.getElementById(`hps-title-${i}`)?.value || '',
-      desc: document.getElementById(`hps-desc-${i}`)?.value || ''
-    });
+    steps.push({ num: val('hps-num-'+i), title: val('hps-title-'+i), desc: val('hps-desc-'+i) });
   }
-  await api('PUT', '/api/admin/hediye', { process: {
-    title: document.getElementById('hp-title').value,
-    desc: document.getElementById('hp-desc').value,
-    steps
-  }});
+  await api('PUT', '/api/admin/hediye', { process: { title: val('hp-title'), desc: val('hp-desc'), steps } });
   hediyeData = await api('GET', '/api/admin/hediye');
   toast('Süreç kaydedildi', 'success');
 }
 
+// ── YORUMLAR ──────────────────────────────────────────────
 async function renderHediyeTestimonials() {
-  const list = await api('GET', '/api/admin/hediye/testimonials');
+  let list = [];
+  try { list = await api('GET', '/api/admin/hediye/testimonials'); } catch(e) {}
   document.getElementById('ht-testimonials').innerHTML = `
     <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
       <button class="btn btn-primary" onclick="openHTestiModal()">+ Yeni Yorum</button>
@@ -1595,25 +1609,20 @@ async function renderHediyeTestimonials() {
     <div class="section-card">
       <div class="section-body" style="padding:0">
         <table class="data-table">
-          <thead><tr><th>Firma</th><th>Kişi</th><th>Yorum</th><th>Durum</th><th>İşlem</th></tr></thead>
+          <thead><tr><th>Kategori</th><th>Kişi</th><th>Yorum</th><th>Aktif</th><th>İşlem</th></tr></thead>
           <tbody>
-            ${list.map(t => `
+            ${list.length ? list.map(t => `
               <tr>
-                <td><strong>${t.company||'—'}</strong></td>
-                <td>${t.name||'—'}</td>
-                <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.quote||'—'}</td>
-                <td>
-                  <label class="toggle">
-                    <input type="checkbox" ${t.active?'checked':''} onchange="toggleHTesti('${t.id}',this.checked)">
-                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
-                  </label>
-                </td>
-                <td>
+                <td><strong>${esc(t.company)}</strong></td>
+                <td>${esc(t.name)}<br><span style="font-size:.75rem;color:var(--muted)">${esc(t.role)}</span></td>
+                <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2)">${esc(t.quote)}</td>
+                <td><label class="toggle"><input type="checkbox" ${t.active?'checked':''} onchange="toggleHTesti('${t.id}',this.checked)"><div class="toggle-track"><div class="toggle-thumb"></div></div></label></td>
+                <td style="display:flex;gap:.35rem">
                   <button class="btn-icon" onclick="editHTesti(${t.id})">✎</button>
                   <button class="btn-icon del" onclick="deleteHTesti(${t.id})">✕</button>
                 </td>
               </tr>
-            `).join('')}
+            `).join('') : '<tr><td colspan="5"><div class="empty"><span class="empty-icon">★</span><p>Henüz yorum yok. Sağ üstten ekleyin.</p></div></td></tr>'}
           </tbody>
         </table>
       </div>
@@ -1628,7 +1637,7 @@ function openHTestiModal(t) {
   document.getElementById('ht-role').value = t?.role || '';
   document.getElementById('ht-initials').value = t?.initials || '';
   document.getElementById('ht-avatarUrl').value = t?.avatarUrl || '';
-  document.getElementById('ht-avatar-preview').innerHTML = t?.avatarUrl ? `<img src="${t.avatarUrl}" style="max-height:52px;border-radius:50%;margin-top:.3rem">` : '';
+  document.getElementById('ht-avatar-preview').innerHTML = t?.avatarUrl ? `<img src="${t.avatarUrl}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-top:.3rem">` : '';
   document.getElementById('ht-quote').value = t?.quote || '';
   document.getElementById('ht-active').checked = t ? t.active : true;
   document.getElementById('hTestiModal').classList.add('open');
@@ -1641,13 +1650,9 @@ async function editHTesti(id) {
 
 async function saveHTesti() {
   const body = {
-    company: document.getElementById('ht-company').value,
-    name: document.getElementById('ht-name').value,
-    role: document.getElementById('ht-role').value,
-    initials: document.getElementById('ht-initials').value,
-    avatarUrl: document.getElementById('ht-avatarUrl').value,
-    quote: document.getElementById('ht-quote').value,
-    active: document.getElementById('ht-active').checked
+    company: val('ht-company'), name: val('ht-name'), role: val('ht-role'),
+    initials: val('ht-initials'), avatarUrl: val('ht-avatarUrl'),
+    quote: val('ht-quote'), active: document.getElementById('ht-active').checked
   };
   if (editingHTestiId) await api('PUT', `/api/admin/hediye/testimonials/${editingHTestiId}`, body);
   else await api('POST', '/api/admin/hediye/testimonials', body);
@@ -1668,84 +1673,16 @@ async function deleteHTesti(id) {
   toast('Yorum silindi');
 }
 
-async function renderHediyeBrands() {
-  const list = await api('GET', '/api/admin/hediye/brands');
-  document.getElementById('ht-brands').innerHTML = `
-    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
-      <button class="btn btn-primary" onclick="openHBrandModal()">+ Yeni Marka</button>
-    </div>
-    <div class="section-card">
-      <div class="section-body" style="padding:0">
-        <table class="data-table">
-          <thead><tr><th>Marka</th><th>Logo</th><th>Durum</th><th>İşlem</th></tr></thead>
-          <tbody>
-            ${list.map(b => `
-              <tr>
-                <td><strong>${b.name||'—'}</strong></td>
-                <td>${b.logoUrl ? `<img src="${b.logoUrl}" style="height:28px;border-radius:3px;object-fit:contain">` : '—'}</td>
-                <td>
-                  <label class="toggle">
-                    <input type="checkbox" ${b.active?'checked':''} onchange="toggleHBrand('${b.id}',this.checked)">
-                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
-                  </label>
-                </td>
-                <td>
-                  <button class="btn-icon" onclick="editHBrand(${b.id})">✎</button>
-                  <button class="btn-icon del" onclick="deleteHBrand(${b.id})">✕</button>
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
-}
-
-function openHBrandModal(b) {
-  editingHBrandId = b ? b.id : null;
-  document.getElementById('hb-name').value = b?.name || '';
-  document.getElementById('hb-logoUrl').value = b?.logoUrl || '';
-  document.getElementById('hb-logo-preview').innerHTML = b?.logoUrl ? `<img src="${b.logoUrl}" style="max-height:40px;border-radius:4px;margin-top:.3rem">` : '';
-  document.getElementById('hb-active').checked = b ? b.active : true;
-  document.getElementById('hBrandModal').classList.add('open');
-}
-
-async function editHBrand(id) {
-  const list = await api('GET', '/api/admin/hediye/brands');
-  openHBrandModal(list.find(b => String(b.id) === String(id)));
-}
-
-async function saveHBrand() {
-  const body = { name: document.getElementById('hb-name').value, logoUrl: document.getElementById('hb-logoUrl').value, active: document.getElementById('hb-active').checked };
-  if (editingHBrandId) await api('PUT', `/api/admin/hediye/brands/${editingHBrandId}`, body);
-  else await api('POST', '/api/admin/hediye/brands', body);
-  closeModal('hBrandModal');
-  renderHediyeBrands();
-  toast('Marka kaydedildi', 'success');
-}
-
-async function toggleHBrand(id, active) {
-  await api('PUT', `/api/admin/hediye/brands/${id}`, { active });
-  toast(active ? 'Aktif' : 'Pasif');
-}
-
-async function deleteHBrand(id) {
-  if (!confirm('Silmek istiyor musunuz?')) return;
-  await api('DELETE', `/api/admin/hediye/brands/${id}`);
-  renderHediyeBrands();
-  toast('Marka silindi');
-}
-
+// ── FORM ──────────────────────────────────────────────────
 function renderHediyeForm() {
   const f = hediyeData.form || {};
   document.getElementById('ht-form').innerHTML = `
     <div class="section-card">
-      <div class="section-head"><div><h3>Sipariş Formu Metinleri</h3></div></div>
+      <div class="section-head"><div><h3>Sipariş Formu</h3><p>Form başlık ve açıklama metinleri</p></div></div>
       <div class="section-body">
-        <div class="form-full"><label class="label">Başlık</label><input class="input" id="hf-title" value="${f.title||''}"></div>
-        <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="hf-desc">${f.desc||''}</textarea></div>
-        <div class="form-full"><label class="label">Form Alt Notu</label><input class="input" id="hf-note" value="${f.note||''}"></div>
+        <div class="form-full"><label class="label">Başlık</label><input class="input" id="hf-title" value="${esc(f.title)}"></div>
+        <div class="form-full"><label class="label">Açıklama</label><textarea class="textarea" id="hf-desc">${esc(f.desc)}</textarea></div>
+        <div class="form-full"><label class="label">Form Alt Notu</label><input class="input" id="hf-note" value="${esc(f.note)}"></div>
         <button class="btn btn-primary" onclick="saveHediyeForm()">Kaydet</button>
       </div>
     </div>
@@ -1753,14 +1690,14 @@ function renderHediyeForm() {
 }
 
 async function saveHediyeForm() {
-  await api('PUT', '/api/admin/hediye', { form: {
-    title: document.getElementById('hf-title').value,
-    desc: document.getElementById('hf-desc').value,
-    note: document.getElementById('hf-note').value
-  }});
+  await api('PUT', '/api/admin/hediye', { form: { title: val('hf-title'), desc: val('hf-desc'), note: val('hf-note') } });
   hediyeData = await api('GET', '/api/admin/hediye');
   toast('Form metinleri kaydedildi', 'success');
 }
+
+// ── UTILS ─────────────────────────────────────────────────
+function val(id) { return document.getElementById(id)?.value || ''; }
+function esc(str) { return (str||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 checkAuth();
 </script>
