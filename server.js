@@ -82,7 +82,13 @@ app.get('/api/content', (req, res) => {
       copyright: data.settings.copyright,
       logoUrl: data.settings.logoUrl,
       faviconUrl: data.settings.faviconUrl
-    }
+    },
+    hediye: data.hediye ? {
+      ...data.hediye,
+      testimonials: (data.hediye.testimonials || []).filter(t => t.active),
+      brands: (data.hediye.brands || []).filter(b => b.active),
+      sliderImages: (data.hediye.sliderImages || []).filter(s => s.active)
+    } : null
   });
 });
 
@@ -177,6 +183,87 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 app.post('/api/admin/upload', auth, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file' });
   res.json({ url: '/uploads/' + req.file.filename });
+});
+
+// ── Admin: Hediye Page Content ────────────────────────────
+app.get('/api/admin/hediye', auth, (req, res) => res.json(readData().hediye || {}));
+
+app.put('/api/admin/hediye', auth, (req, res) => {
+  const data = readData();
+  if (!data.hediye) data.hediye = {};
+  const { hero, occasions, exampleVideo, process, form } = req.body;
+  if (hero) data.hediye.hero = { ...data.hediye.hero, ...hero };
+  if (occasions) data.hediye.occasions = occasions;
+  if (exampleVideo) data.hediye.exampleVideo = { ...data.hediye.exampleVideo, ...exampleVideo };
+  if (process) data.hediye.process = { ...data.hediye.process, ...process };
+  if (form) data.hediye.form = { ...data.hediye.form, ...form };
+  writeData(data); res.json({ ok: true });
+});
+
+// Hediye Testimonials
+app.get('/api/admin/hediye/testimonials', auth, (req, res) => res.json(readData().hediye?.testimonials || []));
+app.post('/api/admin/hediye/testimonials', auth, (req, res) => {
+  const data = readData();
+  if (!data.hediye) data.hediye = {};
+  if (!data.hediye.testimonials) data.hediye.testimonials = [];
+  const t = { ...req.body, id: Date.now(), active: true };
+  data.hediye.testimonials.push(t); writeData(data); res.json(t);
+});
+app.put('/api/admin/hediye/testimonials/:id', auth, (req, res) => {
+  const data = readData();
+  const idx = (data.hediye?.testimonials || []).findIndex(t => String(t.id) === String(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Not found' });
+  data.hediye.testimonials[idx] = { ...data.hediye.testimonials[idx], ...req.body };
+  writeData(data); res.json(data.hediye.testimonials[idx]);
+});
+app.delete('/api/admin/hediye/testimonials/:id', auth, (req, res) => {
+  const data = readData();
+  if (data.hediye) data.hediye.testimonials = (data.hediye.testimonials || []).filter(t => String(t.id) !== String(req.params.id));
+  writeData(data); res.json({ ok: true });
+});
+
+// Hediye Brands
+app.get('/api/admin/hediye/brands', auth, (req, res) => res.json(readData().hediye?.brands || []));
+app.post('/api/admin/hediye/brands', auth, (req, res) => {
+  const data = readData();
+  if (!data.hediye) data.hediye = {};
+  if (!data.hediye.brands) data.hediye.brands = [];
+  const b = { ...req.body, id: Date.now(), active: true };
+  data.hediye.brands.push(b); writeData(data); res.json(b);
+});
+app.put('/api/admin/hediye/brands/:id', auth, (req, res) => {
+  const data = readData();
+  const idx = (data.hediye?.brands || []).findIndex(b => String(b.id) === String(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Not found' });
+  data.hediye.brands[idx] = { ...data.hediye.brands[idx], ...req.body };
+  writeData(data); res.json(data.hediye.brands[idx]);
+});
+app.delete('/api/admin/hediye/brands/:id', auth, (req, res) => {
+  const data = readData();
+  if (data.hediye) data.hediye.brands = (data.hediye.brands || []).filter(b => String(b.id) !== String(req.params.id));
+  writeData(data); res.json({ ok: true });
+});
+
+// Hediye Slider Images
+app.get('/api/admin/hediye/slides', auth, (req, res) => res.json(readData().hediye?.sliderImages || []));
+app.post('/api/admin/hediye/slides', auth, (req, res) => {
+  const data = readData();
+  if (!data.hediye) data.hediye = {};
+  if (!data.hediye.sliderImages) data.hediye.sliderImages = [];
+  const s = { ...req.body, id: Date.now(), active: true };
+  data.hediye.sliderImages.push(s); writeData(data); res.json(s);
+});
+app.put('/api/admin/hediye/slides/:id', auth, (req, res) => {
+  const data = readData();
+  const idx = (data.hediye?.sliderImages || []).findIndex(s => String(s.id) === String(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Not found' });
+  data.hediye.sliderImages[idx] = { ...data.hediye.sliderImages[idx], ...req.body };
+  writeData(data); res.json(data.hediye.sliderImages[idx]);
+});
+app.delete('/api/admin/hediye/slides/:id', auth, (req, res) => {
+  const data = readData();
+  if (data.hediye) data.hediye.sliderImages = (data.hediye.sliderImages || []).filter(s => String(s.id) !== String(req.params.id));
+  writeData(data); res.json({ ok: true });
 });
 
 app.listen(PORT, () => console.log(`Inehsit running on port ${PORT}`));
