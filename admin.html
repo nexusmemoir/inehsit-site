@@ -429,7 +429,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
 
       <!-- SETTINGS -->
       <div class="page" id="page-settings">
-        <div class="section-card">
+        <div class="section-card" style="margin-bottom:1.5rem">
           <div class="section-head"><div><h3>Site Ayarları</h3><p>Genel bilgiler ve şifre</p></div></div>
           <div class="section-body">
             <div class="form-row">
@@ -442,6 +442,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
                 <input class="input" id="set-email" placeholder="info@inehsit.io">
               </div>
             </div>
+            <div class="form-full">
+              <label class="label">Footer Telif Hakkı Yazısı</label>
+              <input class="input" id="set-copyright" placeholder="© 2025 Inehsit. Tüm hakları saklıdır.">
+            </div>
             <div class="form-row">
               <div>
                 <label class="label">Yeni Admin Şifresi</label>
@@ -453,6 +457,39 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15p
               </div>
             </div>
             <button class="btn btn-primary" onclick="saveSettings()">Kaydet</button>
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-bottom:1.5rem">
+          <div class="section-head"><div><h3>Logo ve Favicon</h3><p>Nav logosu ve sekme ikonu</p></div></div>
+          <div class="section-body">
+            <div class="form-full">
+              <label class="label">Site Logosu (Nav)</label>
+              <div style="display:flex;gap:.5rem;align-items:center">
+                <input class="input" id="set-logoUrl" placeholder="Logo URL" style="flex:1">
+                <label style="cursor:pointer;flex-shrink:0">
+                  <span class="btn btn-ghost btn-sm">📁 Logo Seç</span>
+                  <input type="file" accept="image/*" style="display:none" onchange="handleUpload('set-logo',this)">
+                </label>
+              </div>
+              <div id="set-logo-preview" style="margin-top:.5rem"></div>
+              <div id="set-logo-progress" style="display:none;font-size:.78rem;color:var(--blue);margin-top:.3rem">Yükleniyor...</div>
+              <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem">PNG, SVG veya WebP. Şeffaf arka planlı PNG önerilir.</p>
+            </div>
+            <div class="form-full" style="margin-top:1rem">
+              <label class="label">Favicon (Sekme İkonu)</label>
+              <div style="display:flex;gap:.5rem;align-items:center">
+                <input class="input" id="set-faviconUrl" placeholder="Favicon URL" style="flex:1">
+                <label style="cursor:pointer;flex-shrink:0">
+                  <span class="btn btn-ghost btn-sm">📁 Favicon Seç</span>
+                  <input type="file" accept="image/png,image/svg+xml,image/x-icon,image/webp" style="display:none" onchange="handleUpload('set-favicon',this)">
+                </label>
+              </div>
+              <div id="set-favicon-preview" style="margin-top:.5rem"></div>
+              <div id="set-favicon-progress" style="display:none;font-size:.78rem;color:var(--blue);margin-top:.3rem">Yükleniyor...</div>
+              <p style="font-size:.75rem;color:var(--muted);margin-top:.3rem">PNG veya SVG. Kare olmalı, 32x32 önerilir.</p>
+            </div>
+            <button class="btn btn-primary" style="margin-top:.75rem" onclick="saveLogoSettings()">Kaydet</button>
           </div>
         </div>
       </div>
@@ -1050,12 +1087,22 @@ async function loadSettings() {
   const d = await api('GET', '/api/admin/content');
   document.getElementById('set-siteTitle').value = d.settings?.siteTitle || '';
   document.getElementById('set-email').value = d.settings?.email || '';
+  document.getElementById('set-copyright').value = d.settings?.copyright || '';
+  document.getElementById('set-logoUrl').value = d.settings?.logoUrl || '';
+  document.getElementById('set-faviconUrl').value = d.settings?.faviconUrl || '';
+  if (d.settings?.logoUrl) {
+    document.getElementById('set-logo-preview').innerHTML = `<img src="${d.settings.logoUrl}" style="max-height:52px;border-radius:4px;margin-top:.3rem;object-fit:contain;background:repeating-conic-gradient(#ccc 0% 25%,white 0% 50%) 0 0/16px 16px">`;
+  }
+  if (d.settings?.faviconUrl) {
+    document.getElementById('set-favicon-preview').innerHTML = `<img src="${d.settings.faviconUrl}" style="max-height:40px;border-radius:4px;margin-top:.3rem;object-fit:contain">`;
+  }
 }
 
 async function saveSettings() {
   const s = {
     siteTitle: document.getElementById('set-siteTitle').value,
-    email: document.getElementById('set-email').value
+    email: document.getElementById('set-email').value,
+    copyright: document.getElementById('set-copyright').value,
   };
   const np = document.getElementById('set-newPass').value;
   const np2 = document.getElementById('set-newPass2').value;
@@ -1067,6 +1114,15 @@ async function saveSettings() {
   toast('Ayarlar kaydedildi', 'success');
   document.getElementById('set-newPass').value = '';
   document.getElementById('set-newPass2').value = '';
+}
+
+async function saveLogoSettings() {
+  const s = {
+    logoUrl: document.getElementById('set-logoUrl').value,
+    faviconUrl: document.getElementById('set-faviconUrl').value,
+  };
+  await api('PUT', '/api/admin/content', { settings: s });
+  toast('Logo ve favicon kaydedildi. Sayfayı yenileyin.', 'success');
 }
 
 // ── FILE UPLOAD HELPER ────────────────────────────────────
@@ -1111,10 +1167,13 @@ function previewHtml(url) {
 async function handleUpload(id, input) {
   const file = input.files[0];
   if (!file) return;
-  // Map widget id to actual url input id
-  const urlInputId = id === 't-avatar' ? 't-avatarUrl'
-                   : id === 'b-logo'   ? 'b-logoUrl'
-                   : id + '-url';
+  const urlInputMap = {
+    't-avatar': 't-avatarUrl',
+    'b-logo': 'b-logoUrl',
+    'set-logo': 'set-logoUrl',
+    'set-favicon': 'set-faviconUrl',
+  };
+  const urlInputId = urlInputMap[id] || (id + '-url');
   const prog = document.getElementById(id + '-progress');
   const preview = document.getElementById(id + '-preview');
   if (prog) { prog.style.display = 'block'; prog.textContent = 'Yükleniyor...'; }
@@ -1122,7 +1181,7 @@ async function handleUpload(id, input) {
     const url = await uploadFile(file);
     const urlInput = document.getElementById(urlInputId);
     if (urlInput) urlInput.value = url;
-    if (preview) preview.innerHTML = previewHtml(url);
+    if (preview) preview.innerHTML = `<img src="${url}" style="max-height:52px;border-radius:4px;margin-top:.3rem;object-fit:contain;background:repeating-conic-gradient(#ccc 0% 25%,white 0% 50%) 0 0/16px 16px">`;
     if (prog) prog.style.display = 'none';
     toast('Dosya yüklendi', 'success');
   } catch {
