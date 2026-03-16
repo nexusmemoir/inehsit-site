@@ -13,6 +13,35 @@ const sessions = new Map();
 // Ensure uploads dir exists
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
+// Auto-create data.json if missing (first deploy)
+if (!fs.existsSync(DATA_FILE)) {
+  const defaultData = {
+    settings: { adminPassword: 'inehsit2025', siteTitle: 'Inehsit — Yapay Zeka Reklam Videoları', email: 'info@inehsit.io', copyright: '© 2025 Inehsit. Tüm hakları saklıdır.', logoUrl: '', faviconUrl: '' },
+    hero: { badge: 'Yapay Zeka Destekli Video', typewriterPhrases: ['Ürününüzü gerçekten'], title2: 'izleten reklamlar', description: 'Çekim yok, stüdyo yok, uzun bekleyiş yok.', videoUrl: '', ctaPrimary: 'Bilgi Alın, Sizi Arayalım →', ctaSecondary: 'Hizmetlere Bak' },
+    stats: [{ num: '48s', label: 'İçinde Konsept' }, { num: '3-5', label: 'İş Günü Teslim' }, { num: '100+', label: 'Teslim Edilen Video' }, { num: '1', label: 'Revizyon Hakkı' }],
+    services: {
+      urun: { tag: 'Ürün Tanıtım Videosu', title: 'Ürün görseliniz var,\nreklam filmi hazır', description: 'Kozmetik, kıyafet veya aksesuar satıyorsunuz.', tags: ['Kozmetik', 'Kıyafet', 'Aksesuar', 'E-ticaret'], videoUrl: '' },
+      proje: { tag: 'Proje Tanıtım Videosu', title: 'Projenizi yatırımcıya\nve alıcıya anlatın', description: 'Arsa, konut projesi veya müteahhit tanıtımı.', tags: ['İnşaat', 'Arsa', 'Gayrimenkul'], videoUrl: '' },
+      hediye: { tag: 'Hediye Videom', title: 'Fotoğraftan kişisel\nanimatif video', description: 'Sevdiklerinize özel sürpriz.', tags: ['Animatif', 'Hediye', 'Özel Gün'], videoUrl: '' }
+    },
+    testimonials: [],
+    brands: [],
+    hediye: {
+      hero: { eyebrow: 'Kişiye Özel Hediye Video', title: 'Sözcükler yetersiz kaldığında <em>bir video</em> yeterli olur', description: 'Fotoğraf gönderin, hikayenizi anlatın.', heroVideoUrl: '', heroCardCaption: 'Ahmet ve Selin için hazırlandı', heroCardTag: 'Yıldönümü Videosu', ctaPrimary: 'Sipariş Ver →', ctaSecondary: 'Örnek İzle' },
+      occasions: [{ icon: '💍', title: 'Evlilik Teklifi', desc: 'O anı çok daha büyük yapın.' }, { icon: '💑', title: 'Yıldönümü', desc: 'Yılların özeti, tek bir videoda.' }, { icon: '🎂', title: 'Doğum Günü', desc: 'Alışılmışın dışında bir sürpriz.' }, { icon: '🌷', title: 'Anneler Günü', desc: 'Annenize layık bir sürpriz.' }, { icon: '🎓', title: 'Mezuniyet', desc: 'O anı ölümsüzleştirin.' }, { icon: '✈️', title: 'Veda', desc: 'Uzakta olanlara özel bir hatıra.' }, { icon: '💌', title: 'Sürpriz', desc: 'Gerekçesi olmak zorunda değil.' }, { icon: '🎁', title: 'Diğer', desc: 'Aklınızdaki her özel an için.' }],
+      exampleVideo: { title: 'Nasıl görünüyor?', desc: 'Teslim ettiğimiz videolardan bir örnek.', videoUrl: '' },
+      sliderImages: [],
+      process: { title: 'Nasıl çalışır?', desc: 'Formdan sipariş verin, gerisini biz halledelim.', steps: [{ num: '01', title: 'Formu Doldurun', desc: 'Özel gün ve detayları bildirin.' }, { num: '02', title: 'Konsept Onayı', desc: '24 saat içinde sahne planı paylaşıyoruz.' }, { num: '03', title: 'Prodüksiyon', desc: '3 ila 5 iş günü içinde hazır.' }, { num: '04', title: 'Teslimat', desc: 'Paylaşmaya hazır formatta teslim.' }] },
+      testimonials: [],
+      brands: [],
+      form: { title: 'Siparişinizi oluşturun', desc: 'Detayları paylaşın, sizi arayıp konuşalım.', note: 'Fotoğraflarınızı sipariş onayı sonrası WhatsApp üzerinden iletebilirsiniz.' }
+    },
+    submissions: []
+  };
+  fs.writeFileSync(DATA_FILE, JSON.stringify(defaultData, null, 2));
+  console.log('data.json created with defaults');
+}
+
 // Multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
